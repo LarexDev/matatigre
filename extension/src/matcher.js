@@ -212,7 +212,7 @@
                 out[key] = { handle: a.handle, name: a.name || '', tags: a.tags || [], note: a.note || '', enabled: a.enabled !== false, source: 'seed', touched: false };
                 added++;
             } else if (prev.source === 'seed' && !prev.touched) {
-                out[key] = { ...prev, name: a.name || prev.name, tags: a.tags || prev.tags, note: a.note || prev.note };
+                out[key] = { ...prev, name: a.name || prev.name, tags: a.tags || prev.tags, note: a.note || prev.note, enabled: a.enabled !== false };
                 updated++;
             }
         }

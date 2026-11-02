@@ -64,7 +64,7 @@ extensión se pueden volver a importar tal cual.
 
 ## Lista inicial incluida en la extensión
 
-`extension/data/accounts.json` es la lista que se carga al instalar: **110 cuentas públicas** repartidas en cinco listas,
+`extension/data/accounts.json` es la lista que se carga al instalar: **204 cuentas públicas** repartidas en cinco listas,
 solo con nombre de usuario, etiquetas y estado (y el nombre visible cuando se trata de cargos o figuras públicas). No lleva
 notas ni textos de terceros.
 
@@ -73,7 +73,7 @@ notas ni textos de terceros.
 | Abelardo y su gobierno | El presidente, su gabinete, funcionarios, círculo cercano y las cuentas de su movimiento | 26 | activa |
 | Abelardistas | Influenciadores y activistas de la red cercana a Abelardo de la Espriella | 21 | activa |
 | Petro y su gobierno | Gustavo Petro, su familia política y quienes fueron ministros o altos funcionarios de su gobierno | 32 | apagada |
-| Petristas | Pacto Histórico, congresistas afines, influenciadores y simpatizantes del petrismo | 30 | apagada |
+| Petristas | Pacto Histórico, congresistas afines, influenciadores y simpatizantes del petrismo | 124 | apagada |
 | Antipetristas | Cuentas identificadas como antipetristas | 2 | apagada |
 
 Los handles se comprobaron abriendo cada perfil en X y se apoyan en información pública (cargos oficiales y reportajes de

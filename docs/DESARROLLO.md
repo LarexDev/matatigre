@@ -16,7 +16,7 @@ extension/
   src/store.js             chrome.storage.local con valores por defecto y lista inicial
   background/              Service worker: lista inicial, estadísticas, contador del icono, atajos de teclado
   popup/  options/         Interfaces
-  data/accounts.json       Lista inicial pública (110 cuentas: usuario, etiquetas, estado)
+  data/accounts.json       Lista inicial pública (204 cuentas: usuario, etiquetas, estado)
   data/accounts.local.json Lista personal opcional (en .gitignore, excluida del empaquetado)
   icons/                   logo.svg e iconos PNG
 examples/                  lista-ejemplo.json
@@ -101,9 +101,9 @@ npm run serve       # servidor de pruebas; abre http://127.0.0.1:8765/tests/dom-
 4. Etiqueta y publica:
 
    ```bash
-   git tag v1.1.0
+   git tag v1.2.0
    git push origin main --tags
-   gh release create v1.1.0 dist/matatigre-v1.1.0.zip --title "MATATIGRE V.1 v1.1.0" --notes-file CHANGELOG.md
+   gh release create v1.2.0 dist/matatigre-v1.2.0.zip --title "MATATIGRE V.1 v1.2.0" --notes-file CHANGELOG.md
    ```
 
 ## Regenerar recursos gráficos

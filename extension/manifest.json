@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "MATATIGRE V.1",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Filtro de cuentas para X: quita de tu timeline las publicaciones, citas y reposts de las cuentas de tu lista. Local, sin servidores.",
   "minimum_chrome_version": "111",
   "permissions": ["storage"],

@@ -1,6 +1,6 @@
 {
   "name": "matatigre",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "description": "MATATIGRE V.1: extensión de Chrome (MV3) que quita de X las publicaciones de las cuentas de una lista configurable. Sin dependencias.",
   "scripts": {

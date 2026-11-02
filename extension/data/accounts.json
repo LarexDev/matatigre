@@ -29,12 +29,19 @@
  },
  "accounts": [
   {
+   "handle": "_gelver_",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
    "handle": "AABenedetti",
    "name": "Armando Benedetti",
    "tags": [
     "petro"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "ABDELAESPRIELLA",
@@ -64,7 +71,7 @@
    "tags": [
     "petro"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "agmethescaf",
@@ -72,7 +79,7 @@
    "tags": [
     "petrista"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "Alejoberme0",
@@ -90,10 +97,24 @@
    "enabled": true
   },
   {
+   "handle": "alemanapte",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
    "handle": "AlexandraFalla",
    "name": "Alexandra Falla Zerrate",
    "tags": [
     "abelardo"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "alexarochi__",
+   "tags": [
+    "petrista"
    ],
    "enabled": true
   },
@@ -103,7 +124,21 @@
    "tags": [
     "petrista"
    ],
-   "enabled": false
+   "enabled": true
+  },
+  {
+   "handle": "alexkleinO",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "alexrolapiz1",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
   },
   {
    "handle": "alfonsoprada",
@@ -111,7 +146,7 @@
    "tags": [
     "petro"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "AlirioUribeMuoz",
@@ -119,7 +154,7 @@
    "tags": [
     "petrista"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "AlvaroLeyva",
@@ -127,7 +162,7 @@
    "tags": [
     "petro"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "AnaErazoR",
@@ -135,13 +170,20 @@
    "tags": [
     "petrista"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "AnaVesga_G",
    "name": "Ana María Vesga",
    "tags": [
     "abelardo"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "andrearoae",
+   "tags": [
+    "petrista"
    ],
    "enabled": true
   },
@@ -154,12 +196,33 @@
    "enabled": true
   },
   {
+   "handle": "angelicaverbelL",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
    "handle": "AntonioSanguino",
    "name": "Antonio Sanguino",
    "tags": [
     "petro"
    ],
-   "enabled": false
+   "enabled": true
+  },
+  {
+   "handle": "apoloc8",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "aquinoticias1",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
   },
   {
    "handle": "AyalaCarlOzarco",
@@ -169,12 +232,26 @@
    "enabled": true
   },
   {
+   "handle": "bajaalcurnia",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
    "handle": "BecerraGabo",
    "name": "Gabriel Becerra",
    "tags": [
     "petrista"
    ],
-   "enabled": false
+   "enabled": true
+  },
+  {
+   "handle": "betocoralg",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
   },
   {
    "handle": "ByViral24",
@@ -215,12 +292,19 @@
    "enabled": true
   },
   {
+   "handle": "carolannfiru",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
    "handle": "carolinacorcho",
    "name": "Carolina Corcho",
    "tags": [
     "petro"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "carorestrepocan",
@@ -236,14 +320,28 @@
    "tags": [
     "petro"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "CelsoTeteC",
    "tags": [
     "petrista"
    ],
-   "enabled": false
+   "enabled": true
+  },
+  {
+   "handle": "cesarlopezmusic",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "chrijo",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
   },
   {
    "handle": "ckevingomez",
@@ -251,7 +349,7 @@
    "tags": [
     "petrista"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "ClaraLopezObre",
@@ -259,7 +357,7 @@
    "tags": [
     "petrista"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "clarasandoval",
@@ -289,7 +387,7 @@
    "tags": [
     "petrista"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "CristoBustos",
@@ -297,7 +395,14 @@
    "tags": [
     "petro"
    ],
-   "enabled": false
+   "enabled": true
+  },
+  {
+   "handle": "cronicasdeRafa",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
   },
   {
    "handle": "DanielMonroyH",
@@ -305,7 +410,7 @@
    "tags": [
     "petrista"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "DanielRMed",
@@ -313,14 +418,21 @@
    "tags": [
     "petro"
    ],
-   "enabled": false
+   "enabled": true
+  },
+  {
+   "handle": "datoatipico",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
   },
   {
    "handle": "DavidPorrasP",
    "tags": [
     "petrista"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "DavidRacero",
@@ -328,7 +440,7 @@
    "tags": [
     "petrista"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "defensoresco",
@@ -343,7 +455,14 @@
    "tags": [
     "petrista"
    ],
-   "enabled": false
+   "enabled": true
+  },
+  {
+   "handle": "derlilopeza",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
   },
   {
    "handle": "DidierblancoR",
@@ -359,14 +478,35 @@
    "tags": [
     "petro"
    ],
-   "enabled": false
+   "enabled": true
+  },
+  {
+   "handle": "digitaljumper",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
   },
   {
    "handle": "DonIzquierdo_",
    "tags": [
     "petrista"
    ],
-   "enabled": false
+   "enabled": true
+  },
+  {
+   "handle": "eclides3",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "ecoaneko",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
   },
   {
    "handle": "EliCrH",
@@ -380,13 +520,55 @@
    "tags": [
     "petrista"
    ],
-   "enabled": false
+   "enabled": true
+  },
+  {
+   "handle": "elmestizojuan",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "elojodelsalmon",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "elpensador75",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "ElReneJimenez",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "elrorodry",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
   },
   {
    "handle": "elsanoguerabaq",
    "name": "Elsa Noguera",
    "tags": [
     "abelardo"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "emiliolagos1",
+   "tags": [
+    "petrista"
    ],
    "enabled": true
   },
@@ -399,10 +581,31 @@
    "enabled": true
   },
   {
+   "handle": "epicurodesamos_",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
    "handle": "fabio_arjona",
    "name": "Fabio Arjona",
    "tags": [
     "abelardo"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "falaciadeldia",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "fisicoimpuro",
+   "tags": [
+    "petrista"
    ],
    "enabled": true
   },
@@ -412,7 +615,7 @@
    "tags": [
     "petro"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "GA_Jaramillo",
@@ -420,14 +623,28 @@
    "tags": [
     "petro"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "gabymunozz_",
    "tags": [
     "petrista"
    ],
-   "enabled": false
+   "enabled": true
+  },
+  {
+   "handle": "garethsella",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "gener_usuga",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
   },
   {
    "handle": "generaljmora",
@@ -438,12 +655,19 @@
    "enabled": true
   },
   {
+   "handle": "giovannyenciso",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
    "handle": "GloriaRamirezRi",
    "name": "Gloria Inés Ramírez",
    "tags": [
     "petro"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "GustavoBolivar",
@@ -451,7 +675,21 @@
    "tags": [
     "petro"
    ],
-   "enabled": false
+   "enabled": true
+  },
+  {
+   "handle": "hackerfiscalia",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "hanwenzhang1982",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
   },
   {
    "handle": "HelvinCano",
@@ -461,12 +699,40 @@
    "enabled": true
   },
   {
+   "handle": "hernan_murielp",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
    "handle": "HOLLMANMORRIS",
    "name": "Hollman Morris",
    "tags": [
     "petro"
    ],
-   "enabled": false
+   "enabled": true
+  },
+  {
+   "handle": "hyperconectado",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "ilordpetrosky",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "indomablesofia",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
   },
   {
    "handle": "IreneVelezT",
@@ -474,7 +740,7 @@
    "tags": [
     "petro"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "ISAZULETA",
@@ -482,7 +748,14 @@
    "tags": [
     "petrista"
    ],
-   "enabled": false
+   "enabled": true
+  },
+  {
+   "handle": "ismene2",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
   },
   {
    "handle": "Ivan_Velasquez_",
@@ -490,7 +763,7 @@
    "tags": [
     "petro"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "IvanCepedaCast",
@@ -498,7 +771,14 @@
    "tags": [
     "petrista"
    ],
-   "enabled": false
+   "enabled": true
+  },
+  {
+   "handle": "ivonnemilenago",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
   },
   {
    "handle": "J_Guerrero_J",
@@ -506,7 +786,49 @@
    "tags": [
     "petrista"
    ],
-   "enabled": false
+   "enabled": true
+  },
+  {
+   "handle": "jackdelaconcha",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "jahfran",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "jimenitahr",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "jjuanitamayorga",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "jojare2",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "jokeraton",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
   },
   {
    "handle": "Jose_Tcco",
@@ -521,7 +843,14 @@
    "tags": [
     "petro"
    ],
-   "enabled": false
+   "enabled": true
+  },
+  {
+   "handle": "josebq94",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
   },
   {
    "handle": "jrestrp",
@@ -532,12 +861,68 @@
    "enabled": true
   },
   {
+   "handle": "juancaelbroky",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "juanda158392211",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
    "handle": "juanflorians",
    "name": "Juan Florián",
    "tags": [
     "petro"
    ],
-   "enabled": false
+   "enabled": true
+  },
+  {
+   "handle": "juanialferez",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "juaniss____",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "julianfmartinez",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "julianprogre",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "julibmoya",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "juliomario55555",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
   },
   {
    "handle": "KadamaniYannai",
@@ -545,7 +930,35 @@
    "tags": [
     "petro"
    ],
-   "enabled": false
+   "enabled": true
+  },
+  {
+   "handle": "laagutipaca",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "lacura_",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "lajulietamm",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "LAPacifiKA",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
   },
   {
    "handle": "laurisarabia",
@@ -553,7 +966,7 @@
    "tags": [
     "petro"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "LenAmazonas",
@@ -561,14 +974,14 @@
    "tags": [
     "petro"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "LevyRincon",
    "tags": [
     "petrista"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "LilianaCastanoG",
@@ -578,12 +991,40 @@
    "enabled": true
   },
   {
+   "handle": "lore_mezza",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
    "handle": "LuisGMurillo",
    "name": "Luis Gilberto Murillo",
    "tags": [
     "petro"
    ],
-   "enabled": false
+   "enabled": true
+  },
+  {
+   "handle": "macsubversivo",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "madamesimone",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "mafalda_2020_",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
   },
   {
    "handle": "MafeCarrascal",
@@ -591,19 +1032,68 @@
    "tags": [
     "petrista"
    ],
-   "enabled": false
+   "enabled": true
+  },
+  {
+   "handle": "majodoriat",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "manuelbeltrn14",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "manuelzamudioa",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "marianavegabian",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "marianiniecheve",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "mariapa05527055",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
   },
   {
    "handle": "Matador000",
    "tags": [
     "petrista"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "mateoamayaq",
    "tags": [
     "abelardista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "mauricio181212",
+   "tags": [
+    "petrista"
    ],
    "enabled": true
   },
@@ -621,7 +1111,7 @@
    "tags": [
     "petro"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "mauriciomatri",
@@ -635,7 +1125,7 @@
    "tags": [
     "petrista"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "miguel_gomez_m",
@@ -660,12 +1150,19 @@
    "enabled": true
   },
   {
+   "handle": "MissPoirot07",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
    "handle": "MoisesNinco_",
    "name": "Moisés Ninco Daza",
    "tags": [
     "petrista"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "MoralesViviane",
@@ -683,6 +1180,34 @@
    "enabled": true
   },
   {
+   "handle": "nanarizacar",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "negriet",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "negrogaviria",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "nilsonagu",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
    "handle": "nlopezfuentes",
    "name": "Natalia López Fuentes",
    "tags": [
@@ -691,11 +1216,25 @@
    "enabled": true
   },
   {
+   "handle": "noaladoblemoral",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
    "handle": "Nometiente2",
    "tags": [
     "petrista"
    ],
-   "enabled": false
+   "enabled": true
+  },
+  {
+   "handle": "notiparaco",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
   },
   {
    "handle": "omarbula",
@@ -706,11 +1245,18 @@
    "enabled": true
   },
   {
+   "handle": "ouribismo",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
    "handle": "PactoCol",
    "tags": [
     "petrista"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "PalmaEdwin",
@@ -718,7 +1264,7 @@
    "tags": [
     "petro"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "PaolaHolguin",
@@ -734,7 +1280,14 @@
    "tags": [
     "petro"
    ],
-   "enabled": false
+   "enabled": true
+  },
+  {
+   "handle": "pelicolombianas",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
   },
   {
    "handle": "petrogustavo",
@@ -742,7 +1295,7 @@
    "tags": [
     "petro"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "PizarroMariaJo",
@@ -750,14 +1303,21 @@
    "tags": [
     "petrista"
    ],
-   "enabled": false
+   "enabled": true
+  },
+  {
+   "handle": "premiospopis",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
   },
   {
    "handle": "r3ntas",
    "tags": [
     "antipetrista"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "realsantig",
@@ -772,7 +1332,14 @@
    "tags": [
     "petro"
    ],
-   "enabled": false
+   "enabled": true
+  },
+  {
+   "handle": "robertoMtico",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
   },
   {
    "handle": "Rodrigo_Lara_",
@@ -783,12 +1350,26 @@
    "enabled": true
   },
   {
+   "handle": "romanoskygp",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
    "handle": "ryvillavicencio",
    "name": "Rosa Yolanda Villavicencio",
    "tags": [
     "petro"
    ],
-   "enabled": false
+   "enabled": true
+  },
+  {
+   "handle": "sargentochala",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
   },
   {
    "handle": "silvajonathan01",
@@ -798,11 +1379,25 @@
    "enabled": true
   },
   {
+   "handle": "silvanapoveda1",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "sincensuracol",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
    "handle": "smilelalis",
    "tags": [
     "petrista"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "soyjaimeandres",
@@ -825,21 +1420,56 @@
    "tags": [
     "petro"
    ],
-   "enabled": false
+   "enabled": true
+  },
+  {
+   "handle": "tavo2366",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "thomasitaD",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "titeresanti",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "trianavjuli",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "unatalvanessa96",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
   },
   {
    "handle": "Uriasv",
    "tags": [
     "petrista"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "Valentinarauj18",
    "tags": [
     "petrista"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "VaneDeJuaniLoen",
@@ -854,7 +1484,7 @@
    "tags": [
     "petro"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "Veronicalcocerg",
@@ -862,12 +1492,40 @@
    "tags": [
     "petro"
    ],
-   "enabled": false
+   "enabled": true
   },
   {
    "handle": "VincenthRamos",
    "tags": [
     "abelardista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "vovallediaz",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "wilson_suaza_",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "xpost1a",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "YoAlejoV",
+   "tags": [
+    "petrista"
    ],
    "enabled": true
   }

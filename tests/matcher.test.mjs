@@ -173,7 +173,7 @@ test('compactConfig conserva el comportamiento con menos datos', () => {
 
 test('mergeSeed añade, actualiza lo no tocado y respeta ediciones del usuario', () => {
     const existing = {
-        a: { handle: 'a', name: 'viejo', tags: ['x'], enabled: true, source: 'seed', touched: false },
+        a: { handle: 'a', name: 'viejo', tags: ['x'], enabled: false, source: 'seed', touched: false },
         b: { handle: 'b', name: 'mío', tags: ['mía'], enabled: false, source: 'seed', touched: true },
         c: { handle: 'c', name: 'manual', tags: [], enabled: true, source: 'manual', touched: true }
     };
@@ -183,6 +183,7 @@ test('mergeSeed añade, actualiza lo no tocado y respeta ediciones del usuario',
     ]);
     assert.equal(added, 1); assert.equal(updated, 1);
     assert.equal(accounts.a.name, 'nuevo'); assert.deepEqual(accounts.a.tags, ['y']);
+    assert.equal(accounts.a.enabled, true);
     assert.equal(accounts.b.name, 'mío'); assert.equal(accounts.b.enabled, false);
     assert.equal(accounts.c.name, 'manual');
     assert.equal(accounts.d.enabled, false);
@@ -194,13 +195,16 @@ for (const file of ['accounts.json', 'accounts.local.json']) {
         let seed;
         try { seed = JSON.parse(await readFile(new URL('../extension/data/' + file, import.meta.url), 'utf8')); } catch (e) { if (e.code === 'ENOENT') return; throw e; }
         assert.ok(Array.isArray(seed.accounts));
+        // La lista local se combina con la pública: sus etiquetas pueden referirse a listas definidas en ésta.
+        const pub = JSON.parse(await readFile(new URL('../extension/data/accounts.json', import.meta.url), 'utf8'));
+        const lists = { ...pub.lists, ...seed.lists };
         const seen = new Set();
         for (const a of seed.accounts) {
             const h = normalizeHandle(a.handle);
             assert.ok(h, `handle inválido: ${a.handle}`);
             assert.ok(!seen.has(h), `duplicado: ${a.handle}`);
             seen.add(h);
-            for (const t of a.tags || []) assert.ok(seed.lists && seed.lists[t], `lista desconocida ${t}`);
+            for (const t of a.tags || []) assert.ok(lists[t], `lista desconocida ${t}`);
         }
     });
 }

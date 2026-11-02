@@ -2,6 +2,16 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). Versionado [SemVer](https://semver.org/lang/es/).
 
+## [1.2.0] · 2026-11-02
+
+### Añadido
+- La lista **Petristas** pasa de 30 a 124 cuentas (la lista inicial completa suma ahora 204).
+
+### Corregido
+- Al encender una lista que venía apagada (Petro y su gobierno, Petristas, Antipetristas), sus cuentas seguían sin activarse
+  porque cada una venía marcada como desactivada. Ahora la lista inicial las trae activas y el interruptor de la lista decide.
+  Al fusionar la lista inicial, las cuentas que no hayas editado adoptan este estado.
+
 ## [1.1.0] · 2026-11-02
 
 ### Añadido
