@@ -64,15 +64,20 @@ extensión se pueden volver a importar tal cual.
 
 ## Lista inicial incluida en la extensión
 
-`extension/data/accounts.json` es la lista que se carga al instalar: **unas 20 cuentas públicas**, solo con nombre de
-usuario, etiquetas y estado (y el nombre visible en pocos casos). No lleva notas ni textos de terceros.
+`extension/data/accounts.json` es la lista que se carga al instalar: **110 cuentas públicas** repartidas en cinco listas,
+solo con nombre de usuario, etiquetas y estado (y el nombre visible cuando se trata de cargos o figuras públicas). No lleva
+notas ni textos de terceros.
 
-| Lista | Estado por defecto |
-| --- | --- |
-| Abelardistas | activa |
-| Abelardo y su entorno oficial | activa |
-| Antipetristas | apagada |
-| Petristas | apagada |
+| Lista | Qué reúne | Cuentas | Por defecto |
+| --- | --- | ---: | --- |
+| Abelardo y su gobierno | El presidente, su gabinete, funcionarios, círculo cercano y las cuentas de su movimiento | 26 | activa |
+| Abelardistas | Influenciadores y activistas de la red cercana a Abelardo de la Espriella | 21 | activa |
+| Petro y su gobierno | Gustavo Petro, su familia política y quienes fueron ministros o altos funcionarios de su gobierno | 32 | apagada |
+| Petristas | Pacto Histórico, congresistas afines, influenciadores y simpatizantes del petrismo | 30 | apagada |
+| Antipetristas | Cuentas identificadas como antipetristas | 2 | apagada |
+
+Los handles se comprobaron abriendo cada perfil en X y se apoyan en información pública (cargos oficiales y reportajes de
+prensa). Los cargos y los vínculos cambian, y un nombre de usuario puede cambiar de dueño: por eso conviene revisarla.
 
 Se elaboró de forma automática y heurística: **puede tener errores** (ver el [descargo de responsabilidad](../DISCLAIMER.md#4-la-lista-inicial-y-las-listas-son-responsabilidad-tuya)).
 Revísala en *Opciones → Cuentas*; cualquier cuenta se puede desactivar o eliminar, y las listas se apagan enteras en *Opciones → Listas*.

@@ -209,7 +209,7 @@ test('la lista pública es mínima: sin notas, URLs ni grupos ajenos', async () 
     const { readFile } = await import('node:fs/promises');
     const raw = await readFile(new URL('../extension/data/accounts.json', import.meta.url), 'utf8');
     const seed = JSON.parse(raw);
-    assert.ok(seed.accounts.length > 0 && seed.accounts.length <= 100);
+    assert.ok(seed.accounts.length > 0 && seed.accounts.length <= 300);
     assert.ok(!raw.includes('http'), 'sin URLs');
     for (const a of seed.accounts) {
         assert.deepEqual(Object.keys(a).filter(k => !['handle', 'name', 'tags', 'enabled'].includes(k)), [], `campos no permitidos en ${a.handle}`);

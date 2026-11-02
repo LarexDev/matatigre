@@ -1,30 +1,51 @@
 {
  "generatedAt": "2026-11-02",
  "lists": {
-  "abelardista": {
-   "label": "Abelardistas",
-   "description": "Cuentas identificadas como abelardistas.",
+  "abelardo": {
+   "label": "Abelardo y su gobierno",
+   "description": "Abelardo de la Espriella, su gabinete, funcionarios y círculo cercano, y las cuentas oficiales de su movimiento.",
    "enabledByDefault": true
   },
-  "abelardo": {
-   "label": "Abelardo y su entorno oficial",
-   "description": "Cuentas del propio Abelardo de la Espriella.",
+  "abelardista": {
+   "label": "Abelardistas",
+   "description": "Influenciadores y activistas de la red cercana a Abelardo de la Espriella.",
    "enabledByDefault": true
+  },
+  "petro": {
+   "label": "Petro y su gobierno",
+   "description": "Gustavo Petro, su familia política y quienes fueron ministros o altos funcionarios de su gobierno.",
+   "enabledByDefault": false
+  },
+  "petrista": {
+   "label": "Petristas",
+   "description": "Pacto Histórico, congresistas afines, influenciadores y simpatizantes del petrismo.",
+   "enabledByDefault": false
   },
   "antipetrista": {
    "label": "Antipetristas",
    "description": "Cuentas identificadas como antipetristas.",
    "enabledByDefault": false
-  },
-  "petrista": {
-   "label": "Petristas",
-   "description": "Cuentas identificadas como petristas.",
-   "enabledByDefault": false
   }
  },
  "accounts": [
   {
+   "handle": "AABenedetti",
+   "name": "Armando Benedetti",
+   "tags": [
+    "petro"
+   ],
+   "enabled": false
+  },
+  {
    "handle": "ABDELAESPRIELLA",
+   "name": "Abelardo de la Espriella",
+   "tags": [
+    "abelardo"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "abelardistas",
    "tags": [
     "abelardo"
    ],
@@ -32,9 +53,32 @@
   },
   {
    "handle": "AdrianaVeterin",
-   "name": "Adriana Martínez (AdrianaVeterin)",
    "tags": [
     "abelardista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "agaviriau",
+   "name": "Alejandro Gaviria",
+   "tags": [
+    "petro"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "agmethescaf",
+   "name": "Agmeth Escaf",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "Alejoberme0",
+   "name": "Alejandro Bermeo",
+   "tags": [
+    "abelardo"
    ],
    "enabled": true
   },
@@ -46,11 +90,91 @@
    "enabled": true
   },
   {
+   "handle": "AlexandraFalla",
+   "name": "Alexandra Falla Zerrate",
+   "tags": [
+    "abelardo"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "AlexFlorezH",
+   "name": "Alex Flórez",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "alfonsoprada",
+   "name": "Alfonso Prada",
+   "tags": [
+    "petro"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "AlirioUribeMuoz",
+   "name": "Alirio Uribe Muñoz",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "AlvaroLeyva",
+   "name": "Álvaro Leyva",
+   "tags": [
+    "petro"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "AnaErazoR",
+   "name": "Ana Erazo",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "AnaVesga_G",
+   "name": "Ana María Vesga",
+   "tags": [
+    "abelardo"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "andresbarretog",
+   "name": "Andrés Barreto",
+   "tags": [
+    "abelardo"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "AntonioSanguino",
+   "name": "Antonio Sanguino",
+   "tags": [
+    "petro"
+   ],
+   "enabled": false
+  },
+  {
    "handle": "AyalaCarlOzarco",
    "tags": [
     "abelardista"
    ],
    "enabled": true
+  },
+  {
+   "handle": "BecerraGabo",
+   "name": "Gabriel Becerra",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": false
   },
   {
    "handle": "ByViral24",
@@ -61,28 +185,188 @@
   },
   {
    "handle": "Cana_Triste",
-   "name": "Andrés Verstappen",
    "tags": [
     "abelardista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "CarlosARiosP",
+   "name": "Carlos Andrés Ríos Puerta",
+   "tags": [
+    "abelardo"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "carlossuarezr",
+   "name": "Carlos Suárez",
+   "tags": [
+    "abelardo"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "carogomezsn",
+   "name": "Carolina Gómez",
+   "tags": [
+    "abelardo"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "carolinacorcho",
+   "name": "Carolina Corcho",
+   "tags": [
+    "petro"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "carorestrepocan",
+   "name": "María Carolina Restrepo Cañavera",
+   "tags": [
+    "abelardo"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "CeciliaLopezM",
+   "name": "Cecilia López Montaño",
+   "tags": [
+    "petro"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "CelsoTeteC",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "ckevingomez",
+   "name": "Kevin Gómez Paz",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "ClaraLopezObre",
+   "name": "Clara López Obregón",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "clarasandoval",
+   "name": "Clara Lucía Sandoval",
+   "tags": [
+    "abelardo"
    ],
    "enabled": true
   },
   {
    "handle": "coherenciaporf",
-   "name": "Raimundo Franco Abuabara",
    "tags": [
-    "antipetrista",
-    "abelardista"
+    "abelardista",
+    "antipetrista"
    ],
    "enabled": true
   },
   {
    "handle": "ColMadr",
-   "name": "Colmad",
    "tags": [
     "abelardista"
    ],
    "enabled": true
+  },
+  {
+   "handle": "ColombiaHumana_",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "CristoBustos",
+   "name": "Juan Fernando Cristo",
+   "tags": [
+    "petro"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "DanielMonroyH",
+   "name": "Daniel Monroy",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "DanielRMed",
+   "name": "Daniel Rojas Medellín",
+   "tags": [
+    "petro"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "DavidPorrasP",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "DavidRacero",
+   "name": "David Racero",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "defensoresco",
+   "tags": [
+    "abelardo"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "delmarpizarro",
+   "name": "María del Mar Pizarro",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "DidierblancoR",
+   "name": "Didier Blanco",
+   "tags": [
+    "abelardo"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "diegoguevaro",
+   "name": "Diego Guevara",
+   "tags": [
+    "petro"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "DonIzquierdo_",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": false
   },
   {
    "handle": "EliCrH",
@@ -90,6 +374,194 @@
     "abelardista"
    ],
    "enabled": true
+  },
+  {
+   "handle": "ElizbethCristi7",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "elsanoguerabaq",
+   "name": "Elsa Noguera",
+   "tags": [
+    "abelardo"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "Enrique_GomezM",
+   "name": "Enrique Gómez Martínez",
+   "tags": [
+    "abelardo"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "fabio_arjona",
+   "name": "Fabio Arjona",
+   "tags": [
+    "abelardo"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "FranciaMarquezM",
+   "name": "Francia Márquez",
+   "tags": [
+    "petro"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "GA_Jaramillo",
+   "name": "Guillermo Alfonso Jaramillo",
+   "tags": [
+    "petro"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "gabymunozz_",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "generaljmora",
+   "name": "Jorge Eduardo Mora",
+   "tags": [
+    "abelardo"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "GloriaRamirezRi",
+   "name": "Gloria Inés Ramírez",
+   "tags": [
+    "petro"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "GustavoBolivar",
+   "name": "Gustavo Bolívar",
+   "tags": [
+    "petro"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "HelvinCano",
+   "tags": [
+    "abelardista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "HOLLMANMORRIS",
+   "name": "Hollman Morris",
+   "tags": [
+    "petro"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "IreneVelezT",
+   "name": "Irene Vélez",
+   "tags": [
+    "petro"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "ISAZULETA",
+   "name": "Isabel Zuleta",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "Ivan_Velasquez_",
+   "name": "Iván Velásquez",
+   "tags": [
+    "petro"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "IvanCepedaCast",
+   "name": "Iván Cepeda",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "J_Guerrero_J",
+   "name": "Juliana Guerrero",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "Jose_Tcco",
+   "tags": [
+    "abelardista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "JoseA_Ocampo",
+   "name": "José Antonio Ocampo",
+   "tags": [
+    "petro"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "jrestrp",
+   "name": "José Manuel Restrepo",
+   "tags": [
+    "abelardo"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "juanflorians",
+   "name": "Juan Florián",
+   "tags": [
+    "petro"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "KadamaniYannai",
+   "name": "Yannai Kadamani",
+   "tags": [
+    "petro"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "laurisarabia",
+   "name": "Laura Sarabia",
+   "tags": [
+    "petro"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "LenAmazonas",
+   "name": "Lena Estrada Añokazi",
+   "tags": [
+    "petro"
+   ],
+   "enabled": false
   },
   {
    "handle": "LevyRincon",
@@ -106,6 +578,29 @@
    "enabled": true
   },
   {
+   "handle": "LuisGMurillo",
+   "name": "Luis Gilberto Murillo",
+   "tags": [
+    "petro"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "MafeCarrascal",
+   "name": "Mafe Carrascal",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "Matador000",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": false
+  },
+  {
    "handle": "mateoamayaq",
    "tags": [
     "abelardista"
@@ -113,7 +608,45 @@
    "enabled": true
   },
   {
+   "handle": "MauricioGomezCO",
+   "name": "Mauricio Gómez Amín",
+   "tags": [
+    "abelardo"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "MauricioLizcano",
+   "name": "Mauricio Lizcano",
+   "tags": [
+    "petro"
+   ],
+   "enabled": false
+  },
+  {
    "handle": "mauriciomatri",
+   "tags": [
+    "abelardista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "MeDicenWally",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "miguel_gomez_m",
+   "name": "Miguel Gómez Martínez",
+   "tags": [
+    "abelardo"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "MiguelZarateNi",
    "tags": [
     "abelardista"
    ],
@@ -127,16 +660,155 @@
    "enabled": true
   },
   {
-   "handle": "r3ntas",
+   "handle": "MoisesNinco_",
+   "name": "Moisés Ninco Daza",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "MoralesViviane",
+   "name": "Viviane Morales",
+   "tags": [
+    "abelardo"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "MuyEnojadoSoy",
    "tags": [
     "abelardista"
    ],
    "enabled": true
   },
   {
+   "handle": "nlopezfuentes",
+   "name": "Natalia López Fuentes",
+   "tags": [
+    "abelardo"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "Nometiente2",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "omarbula",
+   "name": "Omar Bula Escobar",
+   "tags": [
+    "abelardo"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "PactoCol",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "PalmaEdwin",
+   "name": "Edwin Palma",
+   "tags": [
+    "petro"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "PaolaHolguin",
+   "name": "Paola Holguín",
+   "tags": [
+    "abelardo"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "PedroSanchezCol",
+   "name": "Pedro Arnulfo Sánchez",
+   "tags": [
+    "petro"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "petrogustavo",
+   "name": "Gustavo Petro",
+   "tags": [
+    "petro"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "PizarroMariaJo",
+   "name": "María José Pizarro",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "r3ntas",
+   "tags": [
+    "antipetrista"
+   ],
+   "enabled": false
+  },
+  {
    "handle": "realsantig",
    "tags": [
     "abelardista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "ricardobonillag",
+   "name": "Ricardo Bonilla",
+   "tags": [
+    "petro"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "Rodrigo_Lara_",
+   "name": "Rodrigo Lara Restrepo",
+   "tags": [
+    "abelardo"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "ryvillavicencio",
+   "name": "Rosa Yolanda Villavicencio",
+   "tags": [
+    "petro"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "silvajonathan01",
+   "tags": [
+    "abelardista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "smilelalis",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "soyjaimeandres",
+   "name": "Jaime Andrés Beltrán",
+   "tags": [
+    "abelardo"
    ],
    "enabled": true
   },
@@ -148,20 +820,49 @@
    "enabled": true
   },
   {
-   "handle": "VaneDeCol",
-   "name": "Vanesa Corena",
+   "handle": "susanamuhamad",
+   "name": "Susana Muhamad",
+   "tags": [
+    "petro"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "Uriasv",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "Valentinarauj18",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "VaneDeJuaniLoen",
    "tags": [
     "abelardista"
    ],
    "enabled": true
   },
   {
-   "handle": "VaneDeJuaniLoen",
-   "name": "Vanesa Corena",
+   "handle": "velascoluisf",
+   "name": "Luis Fernando Velasco",
    "tags": [
-    "abelardista"
+    "petro"
    ],
-   "enabled": true
+   "enabled": false
+  },
+  {
+   "handle": "Veronicalcocerg",
+   "name": "Verónica Alcocer",
+   "tags": [
+    "petro"
+   ],
+   "enabled": false
   },
   {
    "handle": "VincenthRamos",

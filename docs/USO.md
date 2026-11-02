@@ -81,7 +81,7 @@ Valores por defecto: autor, reposts y citas **sí**; respuestas y menciones **no
 Total filtrado, por motivo, por día (últimos 10) y cuentas más filtradas. Se pueden reiniciar.
 
 ### Datos
-- **Fusionar lista inicial:** añade las cuentas de la lista inicial incluida en la extensión (unas 20 cuentas; no pisa tus ediciones).
+- **Fusionar lista inicial:** añade las cuentas de la lista inicial incluida en la extensión (110 cuentas en cinco listas; no pisa tus ediciones).
 - **Exportar:** descarga un JSON con toda tu configuración (copia de seguridad).
 - **Importar:** lee un JSON y **suma** sus cuentas, listas, reglas y lista blanca a lo que ya tienes; los ajustes del archivo sí reemplazan los actuales. Los datos se validan antes de guardarse. Formato: [LISTAS.md](LISTAS.md).
 - **Restablecer:** borra todo y vuelve al estado inicial.

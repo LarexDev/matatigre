@@ -12,7 +12,7 @@
 <p align="center">
   <a href="LICENSE"><img alt="Licencia MIT" src="https://img.shields.io/badge/licencia-MIT-2ea44f"></a>
   <img alt="Manifest V3" src="https://img.shields.io/badge/Chrome-Manifest%20V3-1d9bf0">
-  <img alt="Versión 1.0.0" src="https://img.shields.io/badge/versi%C3%B3n-1.0.0-f08a24">
+  <img alt="Versión 1.1.0" src="https://img.shields.io/badge/versi%C3%B3n-1.1.0-f08a24">
   <img alt="Sin telemetría" src="https://img.shields.io/badge/telemetr%C3%ADa-ninguna-6e7681">
   <img alt="Sin dependencias" src="https://img.shields.io/badge/dependencias-0-6e7681">
 </p>
@@ -41,14 +41,14 @@ MATATIGRE filtra **lo que tu navegador muestra** de X. Tú eliges qué cuentas n
 - ⚡ **Antes de que se pinten:** intercepta las respuestas de X y elimina las coincidentes; sin parpadeo ni huecos.
 - 🎛️ **A tu medida:** tres modos, reglas por nombre, biografía, texto o idioma, listas, excepciones y estadísticas.
 - 🔒 **Local:** sin servidores, sin telemetría, sin dependencias. Todo vive en tu navegador.
-- 📋 **Con lista inicial:** trae una lista pública y editable de unas 20 cuentas ([ver detalles](docs/LISTAS.md)); la puedes cambiar por completo.
+- 📋 **Con lista inicial:** trae una lista pública y editable de 110 cuentas en cinco listas, para elegir cuáles filtrar ([ver detalles](docs/LISTAS.md)); la puedes cambiar por completo.
 
 ## Instalación
 
 Necesitas **Google Chrome 111 o superior** (también funciona en Edge, Brave y otros navegadores Chromium).
 La extensión se instala como *extensión sin empaquetar*; tarda menos de un minuto.
 
-**1 · Descarga y descomprime.** En [**Releases**](https://github.com/LarexDev/matatigre/releases) baja `matatigre-v1.0.0.zip` y
+**1 · Descarga y descomprime.** En [**Releases**](https://github.com/LarexDev/matatigre/releases) baja `matatigre-v1.1.0.zip` y
 descomprímelo en una carpeta **permanente** (por ejemplo `Documentos\matatigre`): Chrome la usa desde ahí.
 *(Si prefieres el código fuente: `git clone https://github.com/LarexDev/matatigre.git` y usa la carpeta `extension`.)*
 

@@ -2,6 +2,21 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). Versionado [SemVer](https://semver.org/lang/es/).
 
+## [1.1.0] · 2026-11-02
+
+### Añadido
+- **Lista inicial ampliada a 110 cuentas en cinco listas**, para filtrar de forma más granular:
+  *Abelardo y su gobierno* (26), *Abelardistas* (21), *Petro y su gobierno* (32), *Petristas* (30) y *Antipetristas* (2).
+- Cada handle se comprobó abriendo el perfil en X. Las listas de Petro y Petristas vienen apagadas por defecto.
+
+### Cambiado
+- Una cuenta pasa de Abelardistas a Antipetristas y se retira otra cuyo handle ya no corresponde a la persona que se pretendía incluir.
+- La lista *Abelardo y su entorno oficial* pasa a llamarse *Abelardo y su gobierno*.
+
+### Nota para quien ya tenía instalada la 1.0.0
+- *Opciones → Datos → Fusionar lista inicial* añade las cuentas nuevas y actualiza las listas de las que no hayas editado.
+  Las cuentas que el nuevo listado retira no se borran solas: elimínalas a mano si quieres.
+
 ## [1.0.0] · 2026-11-01
 
 Primera versión pública.
