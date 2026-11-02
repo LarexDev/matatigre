@@ -1,0 +1,13 @@
+# Lista personal de cuentas (no se publica)
+extension/data/accounts.local.json
+
+# Artefactos de construcción y dependencias
+dist/
+node_modules/
+tools/.cache/
+
+# Sistema / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

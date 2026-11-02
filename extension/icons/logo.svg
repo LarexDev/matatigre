@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="MATATIGRE: tigre haciendo la venia, bloqueado">
+  <title>MATATIGRE</title>
+  <defs><clipPath id="badge"><circle cx="64" cy="64" r="56"/></clipPath></defs>
+  <g clip-path="url(#badge)">
+    <!-- fondo de escudo -->
+    <rect width="128" height="128" fill="#323946"/>
+    <g transform="translate(64 72) scale(.84) translate(-64 -72)">
+    <!-- uniforme -->
+    <path d="M14 128C16 106 36 98 64 98s48 8 50 30z" fill="#46532f" stroke="#14110f" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M52 99l12 16 12-16" fill="#e8791a" stroke="#14110f" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M96 103l12 6" stroke="#d4a017" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="64" cy="122" r="2.2" fill="#d4a017"/>
+    <!-- orejas -->
+    <circle cx="30" cy="52" r="10" fill="#e8791a" stroke="#14110f" stroke-width="3"/>
+    <circle cx="98" cy="52" r="10" fill="#e8791a" stroke="#14110f" stroke-width="3"/>
+    <circle cx="30" cy="53" r="4.5" fill="#14110f"/>
+    <circle cx="98" cy="53" r="4.5" fill="#14110f"/>
+    <!-- cabeza -->
+    <path d="M28 58L20 72l7 8-3 12 14 8q26 12 52 0l14-8-3-12 7-8-8-14Q64 40 28 58z" fill="#e8791a" stroke="#14110f" stroke-width="3" stroke-linejoin="round"/>
+    <!-- rayas de las mejillas y del puente -->
+    <g fill="#14110f">
+      <path d="M21 70l17 4-16 3z"/><path d="M24 82l14 0-12 6z"/><path d="M28 93l12-4-6 9z"/>
+      <path d="M107 70l-17 4 16 3z"/><path d="M104 82l-14 0 12 6z"/><path d="M100 93l-12-4 6 9z"/>
+      <path d="M64 56l-3 12h6z"/><path d="M54 58l2 9 4-2z"/><path d="M74 58l-2 9-4-2z"/>
+    </g>
+    <!-- hocico -->
+    <path d="M45 88q19-10 38 0-2 13-19 17-17-4-19-17z" fill="#f3e6cf" stroke="#14110f" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M57 83h14l-7 7z" fill="#14110f"/>
+    <path d="M64 90v5M55 99q9-5 18 0" stroke="#14110f" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+    <!-- mirada seria -->
+    <path d="M37 73q9-7 19-2-9 8-19 2z" fill="#f2c14e" stroke="#14110f" stroke-width="2.4" stroke-linejoin="round"/>
+    <path d="M91 73q-9-7-19-2 9 8 19 2z" fill="#f2c14e" stroke="#14110f" stroke-width="2.4" stroke-linejoin="round"/>
+    <ellipse cx="47" cy="72.2" rx="1.7" ry="4" fill="#14110f"/>
+    <ellipse cx="81" cy="72.2" rx="1.7" ry="4" fill="#14110f"/>
+    <path d="M34 68l24 3M94 68l-24 3" stroke="#14110f" stroke-width="4" stroke-linecap="round"/>
+    <!-- gorra negra de plato -->
+    <path d="M28 57C26 41 36 31 50 28q14-3 28 0c14 3 24 13 22 29z" fill="#16161a" stroke="#050506" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M36 38q28-12 56 0" stroke="#55555e" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+    <path d="M28 57l-.3-7q36 9 72.6 0l-.3 7q-36 9-72 0z" fill="#0b0b0d" stroke="#050506" stroke-width="2"/>
+    <path d="M25 58q39 13 78 0-3 9-39 11-36-2-39-11z" fill="#0b0b0d" stroke="#050506" stroke-width="1.5"/>
+    <path d="M32 61q32 8 64 0" stroke="#55555e" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+    <!-- venia: antebrazo y pata derecha en la visera -->
+    <g transform="translate(21 71) rotate(32)">
+      <rect x="-8" y="-2" width="16" height="64" fill="#e8791a" stroke="#14110f" stroke-width="3"/>
+      <g fill="#14110f"><rect x="-8" y="10" width="16" height="3.5"/><rect x="-8" y="21" width="16" height="3.5"/></g>
+      <rect x="-9" y="38" width="18" height="30" fill="#46532f" stroke="#14110f" stroke-width="3"/>
+      <rect x="-9" y="38" width="18" height="5" fill="#242b1a"/>
+      <rect x="-7" y="-20" width="14" height="22" rx="6" fill="#e8791a" stroke="#14110f" stroke-width="3"/>
+      <path d="M-2.3 -19v9M2.3 -19v9" stroke="#14110f" stroke-width="1.8" stroke-linecap="round"/>
+    </g>
+    </g>
+  </g>
+  <!-- BLOQUEADO -->
+  <circle cx="64" cy="64" r="56" fill="none" stroke="#f3e6cf" stroke-width="13"/>
+  <path d="M25 25l78 78" stroke="#f3e6cf" stroke-width="13" stroke-linecap="round"/>
+  <circle cx="64" cy="64" r="56" fill="none" stroke="#d11a2a" stroke-width="8"/>
+  <path d="M25 25l78 78" stroke="#d11a2a" stroke-width="8" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,37 @@
+/* Ocultamiento controlado por atributos que pone content.js. */
+article[data-xaf="hidden"],
+[data-testid="UserCell"][data-xaf="hidden"],
+[data-xaf-cell="hidden"] {
+    display: none !important;
+}
+
+article[data-xaf="collapsed"] {
+    cursor: pointer;
+}
+article[data-xaf="collapsed"] > * {
+    display: none !important;
+}
+article[data-xaf="collapsed"]::before {
+    content: attr(data-xaf-label);
+    display: block;
+    padding: 10px 16px;
+    font: 13px/1.3 system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: rgb(113, 118, 123);
+    border-bottom: 1px solid rgba(113, 118, 123, 0.3);
+}
+article[data-xaf="collapsed"]:hover::before {
+    background: rgba(113, 118, 123, 0.12);
+}
+
+/* Modo resaltar: la publicación sigue visible, marcada. */
+article[data-xaf="highlight"] {
+    box-shadow: inset 4px 0 0 #f4212e;
+    background: rgba(244, 33, 46, 0.06);
+}
+article[data-xaf="highlight"]::before {
+    content: attr(data-xaf-label);
+    display: block;
+    padding: 4px 16px;
+    font: 12px/1.3 system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: #f4212e;
+}

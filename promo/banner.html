@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>MATATIGRE V.1 · banner 1:1</title>
+<style>
+  :root{--orange:#f08a24;--red:#d11a2a;--cream:#f3e6cf;--ink:#14110f;--slate:#323946}
+  *{box-sizing:border-box;margin:0}
+  html,body{width:1080px;height:1080px;overflow:hidden}
+  body{position:relative;font-family:"Segoe UI",system-ui,sans-serif;color:var(--cream);
+    background:radial-gradient(circle at 50% 34%,#465065 0%,#323946 38%,#1c2028 78%,#14161c 100%)}
+  /* rayas de tigre en las esquinas */
+  .stripes{position:absolute;inset:0;pointer-events:none}
+  .stripes path{fill:var(--orange);opacity:.16}
+  .logo{position:absolute;left:50%;top:44px;width:470px;height:470px;transform:translateX(-50%);
+    filter:drop-shadow(0 22px 40px rgba(0,0,0,.55))}
+  h1{position:absolute;left:0;right:0;top:536px;text-align:center;
+    font:400 148px/1 Impact,"Arial Black",sans-serif;letter-spacing:6px;color:var(--cream);
+    text-shadow:0 6px 0 var(--ink),0 14px 30px rgba(0,0,0,.5)}
+  .v{display:inline-block;vertical-align:top;margin:14px 0 0 18px;padding:8px 22px 10px;border-radius:16px;
+    background:var(--orange);color:var(--ink);font:400 54px/1 Impact,"Arial Black",sans-serif;letter-spacing:2px;
+    text-shadow:none;transform:rotate(-4deg)}
+  .tag{position:absolute;left:0;right:0;top:700px;text-align:center;font:700 44px/1.15 "Segoe UI",system-ui,sans-serif;letter-spacing:.5px}
+  .tag b{color:var(--red);background:var(--cream);padding:0 14px;border-radius:10px}
+  .chips{position:absolute;left:90px;right:90px;top:798px;display:grid;grid-template-columns:1fr 1fr;gap:18px 22px}
+  .chip{display:flex;align-items:center;gap:16px;padding:18px 24px;border-radius:18px;
+    background:rgba(20,17,15,.55);border:2px solid rgba(243,230,207,.22);font:600 28px/1.15 "Segoe UI",system-ui,sans-serif}
+  .chip{white-space:nowrap}
+  .chip i{flex:none;width:14px;height:14px;border-radius:50%;background:var(--orange)}
+  .foot{position:absolute;left:0;right:0;bottom:34px;text-align:center;font:600 25px/1 "Segoe UI",system-ui,sans-serif;
+    letter-spacing:3px;text-transform:uppercase;color:rgba(243,230,207,.72)}
+  .foot span{color:var(--orange)}
+</style>
+</head>
+<body>
+  <svg class="stripes" viewBox="0 0 1080 1080" aria-hidden="true">
+    <path d="M0 90 L150 150 L0 190Z"/><path d="M0 250 L120 290 L0 320Z"/><path d="M0 410 L90 440 L0 470Z"/>
+    <path d="M1080 90 L930 150 L1080 190Z"/><path d="M1080 250 L960 290 L1080 320Z"/><path d="M1080 410 L990 440 L1080 470Z"/>
+    <path d="M0 1080 L70 880 L130 1080Z"/><path d="M170 1080 L215 960 L255 1080Z"/>
+    <path d="M1080 1080 L1010 880 L950 1080Z"/><path d="M910 1080 L865 960 L825 1080Z"/>
+  </svg>
+  <img class="logo" src="../extension/icons/logo.svg" alt="">
+  <h1>MATATIGRE<span class="v">V.1</span></h1>
+  <p class="tag">Lo que no quieres ver, <b>bloqueado</b>.</p>
+  <div class="chips">
+    <div class="chip"><i></i>Autores, reposts y citas</div>
+    <div class="chip"><i></i>Filtra antes de cargar</div>
+    <div class="chip"><i></i>Listas y reglas a medida</div>
+    <div class="chip"><i></i>100% local, sin servidores</div>
+  </div>
+  <p class="foot">Extensión para Chrome · <span>X</span></p>
+</body>
+</html>

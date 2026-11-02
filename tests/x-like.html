@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>x-like</title></head>
+<body>
+<!-- Página sin stubs: la extensión real se inyecta cuando Chrome la sirve como x.com (ver e2e-chrome.mjs). -->
+<ul id="timeline" style="list-style:none;padding:0"></ul>
+<script>
+function tweet({ handle, reposterText }) {
+    const id = String(Math.floor(Math.random() * 1e9));
+    const li = document.createElement('li');
+    // DOM nuevo de X: sin data-testid
+    li.innerHTML = `<div role="link" data-href="/${handle}/status/${id}" tabindex="0"><article class="flex flex-col gap-1">
+      ${reposterText ? `<div><span>${reposterText}</span></div>` : ''}
+      <div><a href="/${handle}"><div>Nombre</div></a><a href="/${handle}"><span>@${handle}</span></a><a href="/${handle}/status/${id}">2h</a></div>
+      <div><span>hola</span></div></article></div>`;
+    return li;
+}
+window.addCases = () => {
+    const t = document.getElementById('timeline');
+    for (const spec of [{ handle: 'ListadaUno' }, { handle: 'neutral' }, { handle: 'ajenouno' }]) t.append(tweet(spec));
+};
+window.state = () => [...document.querySelectorAll('li')].map(li => ({
+    handle: li.querySelector('article a').getAttribute('href').slice(1),
+    visible: getComputedStyle(li).display !== 'none' && li.getClientRects().length > 0
+}));
+
+// ---- API sintética (el servidor de pruebas hace eco de los POST) ----
+const user = h => ({ rest_id: 'u' + h, core: { screen_name: h, name: h }, profile_bio: { description: '' } });
+const tw = (id, h, o = {}) => ({
+    __typename: 'Tweet', rest_id: String(id), core: { user_results: { result: user(h) } },
+    details: { full_text: 'texto' }, legacy: { entities: {}, lang: 'es', ...(o.rt ? { retweeted_status_result: { result: o.rt } } : {}) },
+    ...(o.quoted ? { quoted_status_result: { result: o.quoted } } : {})
+});
+const entry = (id, result) => ({ entryId: 'tweet-' + id, content: { itemContent: { tweet_results: { result } } } });
+window.api = async (via = 'fetch') => {
+    const body = JSON.stringify({ data: { home: { home_timeline_urt: { instructions: [{ type: 'TimelineAddEntries', entries: [
+        entry(1, tw(1, 'ListadaUno')), entry(2, tw(2, 'neutral')), entry(3, tw(3, 'neutral3', { quoted: tw(4, 'ListadaDos') })),
+        entry(5, tw(5, 'ListadaDos', { rt: tw(6, 'otro') })), { entryId: 'cursor-bottom-1', content: {} }
+    ] }] } } } });
+    const url = '/i/api/graphql/abc/HomeTimeline';
+    let json;
+    if (via === 'fetch') json = await (await fetch(url, { method: 'POST', body })).json();
+    else json = await new Promise(res => { const x = new XMLHttpRequest(); x.open('POST', url); x.responseType = 'json'; x.onload = () => res(x.response); x.send(body); });
+    return json.data.home.home_timeline_urt.instructions[0].entries.map(e => e.entryId);
+};
+</script>
+</body></html>

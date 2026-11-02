@@ -1,0 +1,27 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Harness UI</title></head>
+<body>
+<script>
+// Abre ?page=options o ?page=popup con un chrome.* en memoria (sin instalar la extensión).
+const store = {};
+const listeners = [];
+window.chrome = {
+    storage: {
+        local: {
+            async get(keys) { return Object.fromEntries((Array.isArray(keys) ? keys : [keys]).filter(k => k in store).map(k => [k, structuredClone(store[k])])); },
+            async set(o) { const ch = {}; for (const k in o) { ch[k] = { newValue: o[k] }; store[k] = structuredClone(o[k]); } listeners.forEach(f => f(ch, 'local')); },
+            async clear() { for (const k in store) delete store[k]; }
+        },
+        onChanged: { addListener: f => listeners.push(f) }
+    },
+    runtime: { getURL: p => '/extension/' + p, openOptionsPage() { console.log('openOptionsPage'); }, sendMessage: async () => {}, onMessage: { addListener() {} } },
+    tabs: { query: async () => [{ id: 1, url: 'https://x.com/home' }], sendMessage: async () => ({ enabled: true, hidden: 7, accounts: 19, rules: 0, pageHandle: 'someprofile', recent: [{ handle: 'listadauno', role: 'author' }, { handle: 'listadados', role: 'reposter' }] }) }
+};
+const page = new URLSearchParams(location.search).get('page') || 'options';
+fetch(`/extension/${page}/${page}.html`).then(r => r.text()).then(html => {
+    document.open();
+    document.write(html.replace('<head>', `<head><base href="/extension/${page}/">`));
+    document.close();
+});
+</script>
+</body></html>

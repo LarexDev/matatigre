@@ -1,0 +1,14 @@
+{
+  "accounts": [
+    { "handle": "ejemplo_uno", "name": "Ejemplo uno", "tags": ["mi-lista"], "note": "Cuenta ficticia: reemplázala por las tuyas." },
+    { "handle": "ejemplo_dos", "name": "Ejemplo dos", "tags": ["mi-lista", "ruido"] },
+    { "handle": "ejemplo_tres", "tags": ["ruido"], "enabled": false }
+  ],
+  "lists": { "mi-lista": true, "ruido": true },
+  "rules": [
+    { "kind": "handle", "mode": "glob", "pattern": "bot_*", "note": "Cualquier handle que empiece por bot_" },
+    { "kind": "text", "mode": "contains", "pattern": "sorteo urgente", "note": "Ejemplo de regla de texto" }
+  ],
+  "allowlist": ["mi_amigo"],
+  "settings": { "mode": "hide", "filterQuoted": true, "filterReposters": true }
+}

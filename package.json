@@ -1,0 +1,25 @@
+{
+  "name": "matatigre",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MATATIGRE V.1: extensión de Chrome (MV3) que quita de X las publicaciones de las cuentas de una lista configurable. Sin dependencias.",
+  "scripts": {
+    "test": "node tools/sync-main.mjs && node --test tests/matcher.test.mjs",
+    "test:e2e": "node tests/e2e-chrome.mjs",
+    "icons": "node tools/make-icons.mjs",
+    "serve": "node tests/serve.mjs",
+    "sync": "node tools/sync-main.mjs",
+    "build": "node tools/package.mjs",
+    "banner": "node tools/make-banner.mjs",
+    "screenshots": "node tools/make-screenshots.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT",
+  "author": "LarexDev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LarexDev/matatigre.git"
+  }
+}

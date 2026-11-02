@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Modos de MATATIGRE</title>
+<style>
+  *{box-sizing:border-box;margin:0}
+  html,body{width:1760px;height:770px;overflow:hidden}
+  body{background:radial-gradient(circle at 50% 0,#465065,#242a36 60%,#161a22);font-family:"Segoe UI",system-ui,sans-serif;color:#f3e6cf;padding:34px 40px}
+  .row{display:grid;grid-template-columns:repeat(4,1fr);gap:26px}
+  figure{display:grid;gap:14px}
+  figcaption{font:700 28px/1 "Segoe UI",system-ui,sans-serif;text-align:center}
+  figcaption small{display:block;font:500 17px/1.3 "Segoe UI",system-ui,sans-serif;color:#cdbfa8;margin-top:6px}
+  img{width:100%;border-radius:14px;box-shadow:0 14px 34px rgba(0,0,0,.5);border:2px solid rgba(243,230,207,.18)}
+  .ok figcaption{color:#f08a24}
+</style>
+</head>
+<body>
+<div class="row">
+  <figure><figcaption>Sin filtro<small>Así se ve X normalmente</small></figcaption><img src="/docs/img/feed-sin-filtro.png" alt=""></figure>
+  <figure class="ok"><figcaption>Ocultar<small>Desaparece, sin huecos</small></figcaption><img src="/docs/img/feed-ocultar.png" alt=""></figure>
+  <figure><figcaption>Colapsar<small>Barra con el motivo; clic para ver</small></figcaption><img src="/docs/img/feed-colapsar.png" alt=""></figure>
+  <figure><figcaption>Resaltar<small>Visible, pero marcada</small></figcaption><img src="/docs/img/feed-resaltar.png" alt=""></figure>
+</div>
+</body>
+</html>

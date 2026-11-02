@@ -1,0 +1,21 @@
+name: Pruebas
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  unitarias:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Pruebas unitarias del motor
+        run: npm test
+      - name: El paquete se construye y no incluye listas personales
+        run: |
+          npm run build
+          if unzip -l dist/*.zip | grep -q "accounts.local.json"; then echo "El ZIP incluye una lista personal"; exit 1; fi

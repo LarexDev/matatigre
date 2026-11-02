@@ -1,0 +1,174 @@
+{
+ "generatedAt": "2026-11-02",
+ "lists": {
+  "abelardista": {
+   "label": "Abelardistas",
+   "description": "Cuentas identificadas como abelardistas.",
+   "enabledByDefault": true
+  },
+  "abelardo": {
+   "label": "Abelardo y su entorno oficial",
+   "description": "Cuentas del propio Abelardo de la Espriella.",
+   "enabledByDefault": true
+  },
+  "antipetrista": {
+   "label": "Antipetristas",
+   "description": "Cuentas identificadas como antipetristas.",
+   "enabledByDefault": false
+  },
+  "petrista": {
+   "label": "Petristas",
+   "description": "Cuentas identificadas como petristas.",
+   "enabledByDefault": false
+  }
+ },
+ "accounts": [
+  {
+   "handle": "ABDELAESPRIELLA",
+   "tags": [
+    "abelardo"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "AdrianaVeterin",
+   "name": "Adriana Martínez (AdrianaVeterin)",
+   "tags": [
+    "abelardista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "alelasegura",
+   "tags": [
+    "abelardista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "AyalaCarlOzarco",
+   "tags": [
+    "abelardista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "ByViral24",
+   "tags": [
+    "abelardista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "Cana_Triste",
+   "name": "Andrés Verstappen",
+   "tags": [
+    "abelardista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "coherenciaporf",
+   "name": "Raimundo Franco Abuabara",
+   "tags": [
+    "antipetrista",
+    "abelardista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "ColMadr",
+   "name": "Colmad",
+   "tags": [
+    "abelardista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "EliCrH",
+   "tags": [
+    "abelardista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "LevyRincon",
+   "tags": [
+    "petrista"
+   ],
+   "enabled": false
+  },
+  {
+   "handle": "LilianaCastanoG",
+   "tags": [
+    "abelardista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "mateoamayaq",
+   "tags": [
+    "abelardista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "mauriciomatri",
+   "tags": [
+    "abelardista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "millanrussy",
+   "tags": [
+    "abelardista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "r3ntas",
+   "tags": [
+    "abelardista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "realsantig",
+   "tags": [
+    "abelardista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "SoyJerome__",
+   "tags": [
+    "abelardista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "VaneDeCol",
+   "name": "Vanesa Corena",
+   "tags": [
+    "abelardista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "VaneDeJuaniLoen",
+   "name": "Vanesa Corena",
+   "tags": [
+    "abelardista"
+   ],
+   "enabled": true
+  },
+  {
+   "handle": "VincenthRamos",
+   "tags": [
+    "abelardista"
+   ],
+   "enabled": true
+  }
+ ]
+}

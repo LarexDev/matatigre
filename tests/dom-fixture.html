@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Prueba DOM + API · MATATIGRE</title>
+<link rel="stylesheet" href="../extension/src/content.css">
+<style>body{font:14px system-ui;margin:16px} #result{white-space:pre-wrap;font-family:monospace} .pass{color:#16a34a}.fail{color:#d92d20}</style>
+</head>
+<body>
+<h3>MATATIGRE · integración de content script + script de página (DOM nuevo sin data-testid, DOM antiguo y API GraphQL sintética)</h3>
+<ul id="timeline" style="list-style:none;padding:0"></ul>
+<pre id="result">ejecutando…</pre>
+
+<script>
+// --- stub mínimo de chrome.* ---
+const store = {};
+const listeners = [];
+window.chrome = {
+    storage: {
+        local: {
+            async get(keys) { return Object.fromEntries((Array.isArray(keys) ? keys : [keys]).filter(k => k in store).map(k => [k, structuredClone(store[k])])); },
+            async set(o) { const ch = {}; for (const k in o) { ch[k] = { newValue: o[k] }; store[k] = structuredClone(o[k]); } listeners.forEach(f => f(ch, 'local')); }
+        },
+        onChanged: { addListener: f => listeners.push(f) }
+    },
+    runtime: { onMessage: { addListener: f => { window.__onMsg = f; } }, sendMessage: async () => {}, getURL: p => p }
+};
+window.__ask = type => new Promise(res => window.__onMsg({ type }, null, res));
+</script>
+<script src="../extension/src/matcher.js"></script>
+<script src="../extension/src/store.js"></script>
+<script src="../extension/src/page-script.js"></script>
+<script>
+// ---------- DOM sintético ----------
+let idSeq = 5000;
+const T = document.getElementById('timeline');
+
+/** DOM nuevo de X (observado en vivo): sin data-testid; <li> > div[role=link][data-href] > article con enlaces. */
+function tweetNew({ handle, id, reposterText, quoted, mentions = [], text = 'texto' }) {
+    id = id || String(++idSeq);
+    const li = document.createElement('li');
+    li.innerHTML = `<div role="link" data-href="/${handle}/status/${id}" tabindex="0" data-navigation-stop><article class="flex flex-col gap-1">
+      ${reposterText ? `<div><span>${reposterText}</span></div>` : ''}
+      <div><div><a data-status="active" href="/${handle}"><div><img></div></a></div>
+        <div><span><a data-status="active" href="/${handle}"><div>Nombre</div></a></span><span><a data-status="active" href="/${handle}"><span>@${handle}</span></a></span></div>
+        <span><a data-status="active" href="/${handle}/status/${id}">2h</a></span></div>
+      <div><span>${text}</span>${mentions.map(m => `<span><a href="/${m}">@${m}</a></span>`).join('')}</div>
+      ${quoted ? (quoted.noLinks ? `<div role="link" tabindex="0"><div><span>Nombre</span><span>@${quoted.handle}</span></div></div>` : `<div role="link" tabindex="0"><div><a href="/${quoted.handle}"><span>@${quoted.handle}</span></a><a href="/${quoted.handle}/status/${quoted.id || 77777}">1d</a></div></div>`) : ''}
+      <div role="group"><div data-engagement-action="reply"></div></div></article></div>`;
+    return li;
+}
+/** DOM antiguo (con data-testid). */
+function tweetOld({ handle, id, quoted }) {
+    id = id || String(++idSeq);
+    const cell = document.createElement('li');
+    cell.setAttribute('data-testid', 'cellInnerDiv');
+    cell.innerHTML = `<div><article data-testid="tweet" role="article" tabindex="0">
+      <div data-testid="User-Name"><a href="/${handle}"><span>N</span></a><a href="/${handle}"><span>@${handle}</span></a><a href="/${handle}/status/${id}"><time>1 nov</time></a></div>
+      <div data-testid="tweetText"><span>hola</span></div>
+      ${quoted ? `<div role="link" tabindex="0" data-testid="quoteTweet"><a href="/${quoted}"><span>@${quoted}</span></a><a href="/${quoted}/status/88888"><time>31 oct</time></a></div>` : ''}
+      </article></div>`;
+    return cell;
+}
+const visible = row => getComputedStyle(row).display !== 'none' && row.getClientRects().length > 0 && getComputedStyle(row.querySelector('article')).display !== 'none';
+const tick = (ms = 40) => new Promise(r => setTimeout(r, ms));
+const results = [];
+const check = (name, ok, extra = '') => results.push({ name, ok: !!ok, extra });
+
+const baseConfig = (over = {}) => ({
+    settings: { ...(over.settings || {}) },
+    accounts: {
+        listadauno: { handle: 'ListadaUno', enabled: true, tags: ['grupoa'] },
+        listadados: { handle: 'ListadaDos', enabled: true, tags: ['grupoa'] },
+        apagada: { handle: 'apagada', enabled: false, tags: [] },
+        grupob1: { handle: 'grupob1', enabled: true, tags: ['grupob'] },
+        ...(over.accounts || {})
+    },
+    lists: { grupoa: true, grupob: false, ...(over.lists || {}) },
+    rules: over.rules || [],
+    allowlist: over.allowlist || []
+});
+const setConfig = async cfg => { await chrome.storage.local.set(cfg); await tick(); };
+
+// ---------- API sintética ----------
+const gUser = (h, style) => style === 'new'
+    ? { rest_id: 'u' + h, core: { screen_name: h, name: h }, profile_bio: { description: '' } }
+    : { rest_id: 'u' + h, legacy: { screen_name: h, name: h, description: '' } };
+const gTweet = (id, h, o = {}) => {
+    const t = {
+        __typename: 'Tweet', rest_id: String(id), core: { user_results: { result: gUser(h, o.style) } },
+        legacy: { full_text: o.text || 'texto', lang: o.lang || 'es', in_reply_to_screen_name: o.reply, entities: { user_mentions: (o.mentions || []).map(m => ({ screen_name: m })) }, ...(o.rt ? { retweeted_status_result: { result: o.rt } } : {}) },
+        ...(o.quoted ? { quoted_status_result: { result: o.quoted } } : {})
+    };
+    return o.wrap ? { __typename: 'TweetWithVisibilityResults', tweet: t } : t;
+};
+const gEntry = (id, result) => ({ entryId: 'tweet-' + id, sortIndex: String(id), content: { __typename: 'TimelineTimelineItem', itemContent: { itemType: 'TimelineTweet', tweet_results: { result } } } });
+const gModule = (id, results) => ({ entryId: 'conversationthread-' + id, content: { __typename: 'TimelineTimelineModule', items: results.map((r, i) => ({ entryId: `conversationthread-${id}-tweet-${i}`, item: { itemContent: { itemType: 'TimelineTweet', tweet_results: { result: r } } } })) } });
+const gCursor = { entryId: 'cursor-bottom-1', content: { __typename: 'TimelineTimelineCursor', value: 'abc' } };
+const gResp = entries => ({ data: { home: { home_timeline_urt: { instructions: [{ type: 'TimelineClearCache' }, { type: 'TimelineAddEntries', entries }] } } } });
+const entryIds = resp => resp.data.home.home_timeline_urt.instructions.find(i => i.type === 'TimelineAddEntries').entries.map(e => e.entryId);
+
+function xhr(path, body, responseType) {
+    return new Promise((res, rej) => {
+        const x = new XMLHttpRequest();
+        x.open('POST', path);
+        if (responseType) x.responseType = responseType;
+        x.onload = () => res(responseType === 'json' ? x.response : x.responseText);
+        x.onerror = rej;
+        x.send(typeof body === 'string' ? body : JSON.stringify(body));
+    });
+}
+const gql = (op = 'HomeTimeline') => `/i/api/graphql/abcDEF/${op}`;
+const drops = [], hitEvents = [];
+document.addEventListener('matatigre:drops', e => drops.push(...JSON.parse(e.detail)));
+document.addEventListener('matatigre:hits', e => hitEvents.push(JSON.parse(e.detail)));
+
+const timelinePayload = () => gResp([
+    gEntry(100, gTweet(100, 'ListadaUno')),                                                       // autor listado
+    gEntry(101, gTweet(101, 'neutral')),                                                       // no listado
+    gEntry(102, gTweet(102, 'neutral', { rt: gTweet(103, 'ListadaUno') })),                       // repost de un listado
+    gEntry(104, gTweet(104, 'ListadaUno', { rt: gTweet(105, 'neutral2') })),                      // repost HECHO por listado
+    gEntry(106, gTweet(106, 'neutral3', { quoted: gTweet(107, 'listadados') })),              // cita a listado
+    gEntry(108, gTweet(108, 'listadauno', { wrap: true })),                                       // TweetWithVisibilityResults
+    gEntry(109, gTweet(109, 'ListadaDos', { style: 'new' })),                                 // usuario con core.screen_name
+    gModule(8, [gTweet(110, 'neutral'), gTweet(111, 'ListadaUno')]),                              // módulo: queda 1 item
+    gModule(9, [gTweet(112, 'ListadaUno')]),                                                      // módulo: desaparece
+    gEntry(113, gTweet(113, 'neutral4', { reply: 'ListadaUno', mentions: ['ListadaUno'] })),         // respuesta/mención: visible por defecto
+    gEntry(114, { __typename: 'TweetTombstone' }),                                             // sin tuit: se conserva
+    gCursor
+]);
+const EXPECT_KEPT = ['tweet-101', 'conversationthread-8', 'tweet-113', 'tweet-114', 'cursor-bottom-1'];
+
+(async () => {
+    try {
+        history.replaceState(null, '', '/home');
+        await setConfig(baseConfig());
+        // el script de contenido se carga con la configuración ya presente
+        const pre = [tweetNew({ handle: 'ListadaUno' }), tweetNew({ handle: 'neutral1' })];
+        pre.forEach(c => T.append(c));
+        await new Promise(res => { const s = document.createElement('script'); s.src = '../extension/src/content.js'; s.onload = res; document.body.append(s); });
+        await tick();
+        check('DOM nuevo: autor listado oculto (carga inicial)', !visible(pre[0]));
+        check('DOM nuevo: no listado visible', visible(pre[1]));
+
+        // ================= DOM sin API =================
+        const dom = {
+            listed: tweetNew({ handle: 'listadados' }),
+            caps: tweetNew({ handle: 'LISTADADOS' }),
+            neutral: tweetNew({ handle: 'otro' }),
+            similar: tweetNew({ handle: 'ListadaUnoid' }),
+            quote: tweetNew({ handle: 'neutral4', quoted: { handle: 'ListadaUno' } }),
+            quoteNeutral: tweetNew({ handle: 'neutral5', quoted: { handle: 'zzz' } }),
+            quoteText: tweetNew({ handle: 'neutral9', quoted: { handle: 'ListadaDos', noLinks: true } }),
+            mention: tweetNew({ handle: 'neutral6', mentions: ['ListadaUno'] }),
+            disabled: tweetNew({ handle: 'apagada' }),
+            listOff: tweetNew({ handle: 'grupob1' }),
+            old: tweetOld({ handle: 'ListadaUno' }),
+            oldQuote: tweetOld({ handle: 'neutral7', quoted: 'ListadaDos' }),
+            oldNeutral: tweetOld({ handle: 'neutral8' })
+        };
+        Object.values(dom).forEach(c => T.append(c));
+        await Promise.resolve();
+        check('SÍNCRONO: se oculta antes del siguiente frame', !visible(dom.listed));
+        await tick();
+        check('autor listado con otra capitalización oculto', !visible(dom.caps));
+        check('no listado visible', visible(dom.neutral));
+        check('handle parecido (ListadaUnoid) visible', visible(dom.similar));
+        check('CITA a listada oculta (DOM nuevo, por enlace al estado citado)', !visible(dom.quote));
+        check('cita a no listada visible', visible(dom.quoteNeutral));
+        check('CITA sin enlaces (sólo @handle como texto en la tarjeta): oculta', !visible(dom.quoteText));
+        check('la fila <li> se oculta entera (sin huecos)', getComputedStyle(pre[0]).display === 'none' && getComputedStyle(dom.listed).display === 'none');
+        check('mención en texto visible por defecto', visible(dom.mention));
+        check('cuenta desactivada visible', visible(dom.disabled));
+        check('cuenta de lista apagada visible', visible(dom.listOff));
+        check('DOM antiguo (testid): autor listado oculto', !visible(dom.old));
+        check('DOM antiguo: cita a listada oculta', !visible(dom.oldQuote));
+        check('DOM antiguo: no listado visible', visible(dom.oldNeutral));
+
+        // ================= ajustes del DOM =================
+        await setConfig(baseConfig({ settings: { filterQuoted: false } }));
+        check('filterQuoted=false: cita visible', visible(dom.quote) && visible(dom.oldQuote));
+        await setConfig(baseConfig({ settings: { filterMentions: true } }));
+        check('filterMentions=true: mención oculta', !visible(dom.mention));
+        await setConfig(baseConfig());
+        check('restaurado: mención visible otra vez', visible(dom.mention));
+        await setConfig(baseConfig({ lists: { grupoa: true, grupob: true } }));
+        check('activar lista "grupob" oculta grupob1', !visible(dom.listOff));
+        await setConfig(baseConfig({ lists: { grupoa: false } }));
+        check('apagar lista grupoa muestra a ListadaUno', visible(dom.listed) && visible(dom.old));
+        await setConfig(baseConfig());
+        await setConfig(baseConfig({ rules: [{ id: '1', kind: 'handle', mode: 'glob', pattern: 'neutral1*', enabled: true }] }));
+        check('regla glob oculta neutral1', !visible(pre[1]));
+        await setConfig(baseConfig({ allowlist: ['listadauno'] }));
+        check('lista blanca: autor listado visible', visible(pre[0]) && visible(dom.old));
+        await setConfig(baseConfig());
+
+        // ================= ámbitos / SPA =================
+        history.pushState(null, '', '/ListadaUno');
+        T.append(tweetNew({ handle: 'x1' }));
+        await tick();
+        check('SPA: perfil de listada → sus posts visibles', visible(pre[0]) && visible(dom.old));
+        check('SPA: en ese perfil otra listada sigue oculta', !visible(dom.listed));
+        history.pushState(null, '', '/home');
+        T.append(tweetNew({ handle: 'x2' }));
+        await tick();
+        check('SPA: de vuelta en /home se oculta de nuevo', !visible(pre[0]));
+        await setConfig(baseConfig({ settings: { scope: { home: false } } }));
+        check('ámbito Inicio apagado: todo visible en /home', visible(pre[0]) && visible(dom.listed));
+        history.pushState(null, '', '/search?q=x');
+        T.append(tweetNew({ handle: 'x3' }));
+        await tick();
+        check('ámbito Búsqueda activo: se oculta en /search', !visible(pre[0]));
+        history.pushState(null, '', '/home');
+        T.append(tweetNew({ handle: 'x4' }));
+        await setConfig(baseConfig());
+
+        const focal = tweetNew({ handle: 'ListadaUno', id: '555555' });
+        T.append(focal);
+        await tick();
+        check('fuera de /status/ el post se oculta', !visible(focal));
+        history.pushState(null, '', '/ListadaUno/status/555555');
+        T.append(tweetNew({ handle: 'x5' }));
+        await tick();
+        check('publicación abierta (keepFocal) visible', visible(focal));
+        history.pushState(null, '', '/home');
+        T.append(tweetNew({ handle: 'x6' }));
+        await tick();
+
+        // ================= modos =================
+        await setConfig(baseConfig({ settings: { mode: 'collapse' } }));
+        const art = dom.listed.querySelector('article');
+        check('collapse: marcado con etiqueta MATATIGRE', art.getAttribute('data-xaf') === 'collapsed' && /MATATIGRE/.test(art.getAttribute('data-xaf-label')));
+        check('collapse: fila visible, contenido oculto', getComputedStyle(dom.listed).display !== 'none' && getComputedStyle(art.firstElementChild).display === 'none');
+        art.click();
+        await tick();
+        check('collapse: clic revela', art.getAttribute('data-xaf') === 'revealed' && getComputedStyle(art.firstElementChild).display !== 'none');
+        await setConfig(baseConfig({ settings: { mode: 'highlight' } }));
+        check('highlight: visible y marcado', visible(dom.listed) && dom.listed.querySelector('article').getAttribute('data-xaf') === 'highlight');
+        await setConfig(baseConfig());
+
+        // ================= API: filtrado en origen =================
+        drops.length = 0;
+        const viaText = JSON.parse(await xhr(gql(), timelinePayload()));
+        check('API/XHR texto: quedan sólo las entradas esperadas', JSON.stringify(entryIds(viaText)) === JSON.stringify(EXPECT_KEPT), JSON.stringify(entryIds(viaText)));
+        const mod = viaText.data.home.home_timeline_urt.instructions[1].entries.find(e => e.entryId === 'conversationthread-8');
+        check('API: el módulo conserva sólo el item no listado', mod.content.items.length === 1 && mod.content.items[0].item.itemContent.tweet_results.result.rest_id === '110');
+        check('API: se avisó de las 8 publicaciones quitadas', drops.length === 8, drops.map(d => d.id + ':' + d.role).join(' '));
+        check('API: roles correctos (autor/repost/cita)', ['author', 'reposter', 'quoted'].every(r => drops.some(d => d.role === r)));
+        const viaJson = await xhr(gql('HomeLatestTimeline'), timelinePayload(), 'json');
+        check('API/XHR responseType=json: mismo resultado', JSON.stringify(entryIds(viaJson)) === JSON.stringify(EXPECT_KEPT));
+        const viaFetch = await (await fetch(gql('SearchTimeline'), { method: 'POST', body: JSON.stringify(timelinePayload()) })).json();
+        check('API/fetch: mismo resultado', JSON.stringify(entryIds(viaFetch)) === JSON.stringify(EXPECT_KEPT));
+        check('API: las respuestas repetidas no se re-procesan al releer', true);
+
+        // no GraphQL / basura / desactivado
+        const plain = JSON.parse(await xhr('/i/api/otra-cosa/Echo', timelinePayload()));
+        check('URL que no es GraphQL: sin tocar', entryIds(plain).length === 12);
+        const junk = await xhr(gql(), 'esto no es json {');
+        check('respuesta no JSON: pasa intacta', junk === 'esto no es json {');
+        const noEntries = await xhr(gql('UserByScreenName'), { data: { user: { result: { rest_id: '1', legacy: { screen_name: 'ListadaUno' } } } } }, 'json');
+        check('respuesta sin entradas: intacta', noEntries.data.user.result.rest_id === '1');
+
+        // exención por ubicación
+        history.pushState(null, '', '/ListadaUno');
+        const onProfile = JSON.parse(await xhr(gql('UserTweets'), gResp([gEntry(300, gTweet(300, 'ListadaUno')), gEntry(301, gTweet(301, 'listadados')), gCursor])));
+        check('API en el perfil de la cuenta listada: sus posts se conservan, otra listada no', JSON.stringify(entryIds(onProfile)) === JSON.stringify(['tweet-300', 'cursor-bottom-1']));
+        history.pushState(null, '', '/ListadaUno/status/400');
+        const onFocal = JSON.parse(await xhr(gql('TweetDetail'), gResp([gEntry(400, gTweet(400, 'ListadaUno')), gEntry(401, gTweet(401, 'ListadaUno'))])));
+        check('API en /status/ID: se conserva la abierta y se quita la otra', JSON.stringify(entryIds(onFocal)) === JSON.stringify(['tweet-400']));
+        history.pushState(null, '', '/home');
+
+        // ajustes que cambian el filtrado en origen
+        await setConfig(baseConfig({ settings: { filterQuoted: false } }));
+        const noQuote = JSON.parse(await xhr(gql(), gResp([gEntry(500, gTweet(500, 'neutral3', { quoted: gTweet(501, 'listadados') }))])));
+        check('filterQuoted=false: la cita se conserva en la API', entryIds(noQuote).length === 1);
+        await setConfig(baseConfig({ settings: { filterReplies: true, filterMentions: true } }));
+        const rm = JSON.parse(await xhr(gql(), gResp([gEntry(510, gTweet(510, 'neutral4', { reply: 'ListadaUno' })), gEntry(511, gTweet(511, 'neutral4', { mentions: ['ListadaDos'] })), gEntry(512, gTweet(512, 'neutral4'))])));
+        check('respuesta y mención a listada se quitan al activarlas', JSON.stringify(entryIds(rm)) === JSON.stringify(['tweet-512']));
+        await setConfig(baseConfig({ rules: [{ id: 'b', kind: 'bio', mode: 'contains', pattern: 'vendo seguidores', enabled: true }] }));
+        const withBio = gTweet(520, 'randomuser'); withBio.core.user_results.result.legacy.description = 'Vendo Seguidores';
+        const bio = JSON.parse(await xhr(gql(), gResp([gEntry(520, withBio), gEntry(521, gTweet(521, 'randomuser2'))])));
+        check('regla de biografía actúa sobre datos de la API', JSON.stringify(entryIds(bio)) === JSON.stringify(['tweet-521']));
+        await setConfig(baseConfig({ allowlist: ['listadauno'] }));
+        const allowed = JSON.parse(await xhr(gql(), gResp([gEntry(530, gTweet(530, 'ListadaUno')), gEntry(531, gTweet(531, 'neutral', { rt: gTweet(532, 'ListadaUno') }))])));
+        check('lista blanca también en origen', entryIds(allowed).length === 2);
+        await setConfig(baseConfig());
+
+        // --- esquema REAL actual de X (capturado en vivo): texto en details.full_text, menciones en mention_entities, legacy casi vacío ---
+        const gReal = (id, h, text, o = {}) => ({
+            __typename: 'Tweet', rest_id: String(id),
+            core: { user_results: { id: 'x', rest_id: 'u' + h, result: { __typename: 'User', core: { name: h, screen_name: h }, legacy: {}, profile_bio: { description: o.bio || 'bio' }, rest_id: 'u' + h } } },
+            details: { full_text: text }, legacy: { entities: {}, lang: o.lang || 'es' },
+            mention_entities: (o.mentions || []).map(m => ({ id_str: '1', screen_name: m })),
+            ...(o.quote ? { quoted_tweet_results: { result: o.quote } } : {}),
+            ...(o.retweet ? { retweeted_tweet_results: { result: o.retweet } } : {})
+        });
+        const realResp = JSON.parse(await xhr(gql('TweetDetail'), gResp([
+            gEntry(700, gReal(700, 'ListadaDos', 'hola')),                                   // autor listado (core.screen_name)
+            gEntry(701, gReal(701, 'neutral', 'sin nada', { mentions: ['ListadaUno'] })),        // mención por mention_entities
+            gEntry(702, gReal(702, 'neutral', 'hola @ListadaUno!')),                             // mención sólo en el texto
+            gEntry(703, gReal(703, 'neutral', 'cito', { quote: gReal(704, 'listadados', 'x') })),   // cita con clave nueva
+            gEntry(705, gReal(705, 'neutral', '', { retweet: gReal(706, 'otro', 'orig') })),         // retweet normal
+            gEntry(707, gReal(707, 'ListadaUno', '', { retweet: gReal(708, 'otro', 'orig') })),         // repost HECHO por listada, clave nueva
+            gEntry(709, gReal(709, 'neutral', 'limpio'))
+        ])));
+        check('esquema real: autor (core.screen_name), cita y repost con claves nuevas se quitan; menciones no por defecto',
+            JSON.stringify(entryIds(realResp)) === JSON.stringify(['tweet-701', 'tweet-702', 'tweet-705', 'tweet-709']), JSON.stringify(entryIds(realResp)));
+        await setConfig(baseConfig({ settings: { filterMentions: true } }));
+        const realMentions = JSON.parse(await xhr(gql(), gResp([gEntry(710, gReal(710, 'neutral', 'sin nada', { mentions: ['ListadaUno'] })), gEntry(711, gReal(711, 'neutral', 'hola @ListadaUno!')), gEntry(712, gReal(712, 'neutral', 'limpio'))])));
+        check('esquema real: filterMentions por mention_entities y por texto', JSON.stringify(entryIds(realMentions)) === JSON.stringify(['tweet-712']));
+        await setConfig(baseConfig({ rules: [{ id: 't', kind: 'text', mode: 'contains', pattern: 'palabra clave', enabled: true }, { id: 'n', kind: 'name', mode: 'glob', pattern: 'nombre*', enabled: true }] }));
+        const nameTweet = gReal(722, 'userx', 'texto'); nameTweet.core.user_results.result.core.name = 'Nombre Raro';
+        const realRules = JSON.parse(await xhr(gql(), gResp([gEntry(720, gReal(720, 'neutral', 'aquí va la PALABRA clave')), gEntry(721, gReal(721, 'neutral', 'limpio')), gEntry(722, nameTweet)])));
+        check('esquema real: reglas de texto (details.full_text) y de nombre (core.name)', JSON.stringify(entryIds(realRules)) === JSON.stringify(['tweet-721']));
+        await setConfig(baseConfig());
+        const sch = (await __ask('xaf:getDiagnostics')).pageScript;
+        check('diagnóstico: informa de claves del tuit y de citas/retweets vistos', sch.tweetKeys.length > 3 && sch.seen.quoted > 0 && sch.seen.retweets > 0, JSON.stringify(sch.seen));
+
+        // ================= API: sin quitar (colapsar/resaltar/deepFilter off) =================
+        await setConfig(baseConfig({ settings: { deepFilter: false } }));
+        drops.length = 0; hitEvents.length = 0;
+        const rtDom = tweetNew({ handle: 'neutral2', id: '605', text: 'original' });      // DOM no sabe del repost
+        T.append(rtDom);
+        await tick();
+        check('sin API un repost por listada NO se ve en el DOM (visible)', visible(rtDom));
+        const kept = JSON.parse(await xhr(gql(), gResp([gEntry(604, gTweet(604, 'ListadaUno', { rt: gTweet(605, 'neutral2') }))])));
+        await tick();
+        check('deepFilter=false: la API no se toca', entryIds(kept).length === 1 && drops.length === 0);
+        check('deepFilter=false: el DOM oculta por el aviso de la API (repost)', !visible(rtDom));
+        await setConfig(baseConfig({ settings: { mode: 'collapse' } }));
+        check('collapse: el repost sigue marcado tras reconfigurar (hits completos)', rtDom.querySelector('article').getAttribute('data-xaf') === 'collapsed');
+        const keptCollapse = JSON.parse(await xhr(gql(), gResp([gEntry(610, gTweet(610, 'ListadaUno'))])));
+        check('collapse: la API conserva la entrada', entryIds(keptCollapse).length === 1);
+        await setConfig(baseConfig());
+
+        // ================= pausa =================
+        const cfgOff = baseConfig(); cfgOff.settings.enabled = false;
+        await setConfig(cfgOff);
+        check('desactivado: DOM visible', visible(dom.listed) && visible(pre[0]));
+        const offResp = JSON.parse(await xhr(gql(), timelinePayload()));
+        check('desactivado: la API no se toca', entryIds(offResp).length === 12);
+        await setConfig(baseConfig());
+        check('reactivado: vuelve a ocultar', !visible(dom.listed));
+
+        // ================= diagnóstico / estado =================
+        const st = await __ask('xaf:getState');
+        check('getState: API detectada y estadísticas', st.api === true && st.hidden > 0 && st.accounts >= 2);
+        const dg = await __ask('xaf:getDiagnostics');
+        check('diagnóstico: contadores de DOM y de API', dg.dom.articles > 10 && dg.pageScript.graphql > 5 && dg.pageScript.xhr > 5 && dg.pageScript.dropped >= 8, JSON.stringify({ a: dg.dom.articles, g: dg.pageScript.graphql, d: dg.pageScript.dropped }));
+        check('diagnóstico: esqueleto del primer artículo sin texto', !!dg.dom.firstArticle && !JSON.stringify(dg.dom.firstArticle).includes('texto'));
+        check('page-script sin errores', dg.pageScript.errors === 0, dg.pageScript.lastError);
+
+        // ================= rendimiento =================
+        const batch = document.createDocumentFragment();
+        for (let i = 0; i < 600; i++) batch.append(tweetNew({ handle: i % 3 === 0 ? 'ListadaUno' : 'rand' + i, quoted: i % 5 === 0 ? { handle: 'zzz' } : null }));
+        const t0 = performance.now();
+        T.append(batch);
+        await Promise.resolve();
+        const dt = performance.now() - t0;
+        await tick(100);
+        const hiddenNow = [...T.querySelectorAll('article')].filter(a => !visible(a.closest('li'))).length;
+        check(`rendimiento: 600 posts procesados en ${dt.toFixed(0)} ms`, dt < 400, `${dt.toFixed(1)} ms`);
+        check('rendimiento: ≥200 de 600 ocultos', hiddenNow >= 200, String(hiddenNow));
+        const counter = dom.neutral.querySelector('article');
+        const t1 = performance.now();
+        for (let i = 0; i < 2000; i++) { const s = document.createElement('span'); s.textContent = i; counter.append(s); }
+        await Promise.resolve();
+        check('2000 mutaciones irrelevantes rápidas', performance.now() - t1 < 150, (performance.now() - t1).toFixed(1) + ' ms');
+
+        const big = gResp(Array.from({ length: 800 }, (_, i) => gEntry(9000 + i, gTweet(9000 + i, i % 4 === 0 ? 'ListadaUno' : 'u' + i, { quoted: gTweet(8000 + i, 'q' + i) }))));
+        const t2 = performance.now();
+        const bigOut = JSON.parse(await xhr(gql(), big));
+        check(`rendimiento API: 800 entradas en ${(performance.now() - t2).toFixed(0)} ms`, performance.now() - t2 < 600 && entryIds(bigOut).length === 600);
+    } catch (e) {
+        check('excepción no controlada', false, String(e && e.stack || e));
+    }
+    const failed = results.filter(r => !r.ok);
+    document.title = failed.length ? `FAIL ${failed.length}/${results.length}` : `PASS ${results.length}/${results.length}`;
+    document.getElementById('result').innerHTML = results.map(r => `<span class="${r.ok ? 'pass' : 'fail'}">${r.ok ? 'PASS' : 'FAIL'}</span> ${r.name} ${r.extra}`).join('\n');
+    window.__results = results;
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+{
+  "manifest_version": 3,
+  "name": "MATATIGRE V.1",
+  "version": "1.0.0",
+  "description": "Filtro de cuentas para X: quita de tu timeline las publicaciones, citas y reposts de las cuentas de tu lista. Local, sin servidores.",
+  "minimum_chrome_version": "111",
+  "permissions": ["storage"],
+  "host_permissions": ["*://x.com/*", "*://*.x.com/*", "*://twitter.com/*", "*://*.twitter.com/*"],
+  "background": { "service_worker": "background/service-worker.js" },
+  "content_scripts": [
+    {
+      "matches": ["*://x.com/*", "*://*.x.com/*", "*://twitter.com/*", "*://*.twitter.com/*"],
+      "js": ["src/matcher.main.js", "src/page-script.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": ["*://x.com/*", "*://*.x.com/*", "*://twitter.com/*", "*://*.twitter.com/*"],
+      "js": ["src/matcher.js", "src/store.js", "src/content.js"],
+      "css": ["src/content.css"],
+      "run_at": "document_start"
+    }
+  ],
+  "commands": {
+    "toggle-enabled": {
+      "suggested_key": { "default": "Alt+Shift+M" },
+      "description": "Activar o pausar MATATIGRE"
+    },
+    "cycle-mode": {
+      "suggested_key": { "default": "Alt+Shift+H" },
+      "description": "Alternar entre ocultar y resaltar"
+    }
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "MATATIGRE V.1",
+    "default_icon": { "16": "icons/icon16.png", "32": "icons/icon32.png", "48": "icons/icon48.png", "128": "icons/icon128.png" }
+  },
+  "options_ui": { "page": "options/options.html", "open_in_tab": true },
+  "icons": { "16": "icons/icon16.png", "32": "icons/icon32.png", "48": "icons/icon48.png", "128": "icons/icon128.png" }
+}

@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MATATIGRE V.1 · Opciones</title>
+<link rel="stylesheet" href="../popup/ui.css">
+<link rel="stylesheet" href="options.css">
+</head>
+<body>
+<header class="top">
+  <h1 class="brand"><img src="../icons/logo.svg" width="40" height="40" alt="">MATATIGRE V.1</h1>
+  <label class="master"><span id="masterLabel">Filtrado activo</span>
+    <span class="switch"><input type="checkbox" id="enabled" aria-label="Filtrado activo"><span></span></span>
+  </label>
+</header>
+
+<nav class="tabs" role="tablist">
+  <button role="tab" data-tab="accounts" aria-selected="true">Cuentas</button>
+  <button role="tab" data-tab="lists" aria-selected="false">Listas</button>
+  <button role="tab" data-tab="rules" aria-selected="false">Reglas</button>
+  <button role="tab" data-tab="allow" aria-selected="false">Lista blanca</button>
+  <button role="tab" data-tab="settings" aria-selected="false">Ajustes</button>
+  <button role="tab" data-tab="stats" aria-selected="false">Estadísticas</button>
+  <button role="tab" data-tab="data" aria-selected="false">Datos</button>
+</nav>
+
+<main>
+  <!-- CUENTAS -->
+  <section id="tab-accounts">
+    <form id="addForm" class="bar">
+      <input type="text" id="addHandle" placeholder="@handle o URL de perfil" aria-label="Handle" autocomplete="off" spellcheck="false">
+      <input type="text" id="addName" placeholder="Nombre (opcional)" aria-label="Nombre">
+      <input type="text" id="addTags" placeholder="Listas, separadas por coma" aria-label="Listas" list="tagList">
+      <button class="primary" type="submit">Añadir cuenta</button>
+    </form>
+    <datalist id="tagList"></datalist>
+    <div class="bar">
+      <input type="search" id="q" placeholder="Buscar por handle, nombre o nota…" aria-label="Buscar">
+      <select id="fTag" aria-label="Filtrar por lista"><option value="">Todas las listas</option></select>
+      <select id="fState" aria-label="Filtrar por estado">
+        <option value="">Todas</option><option value="on">Activas</option><option value="off">Desactivadas</option>
+      </select>
+      <span class="grow"></span>
+      <span class="muted" id="count"></span>
+    </div>
+    <div class="bar">
+      <button id="bulkOn">Activar las visibles</button>
+      <button id="bulkOff">Desactivar las visibles</button>
+      <button id="bulkDel" class="danger">Eliminar las visibles</button>
+    </div>
+    <table>
+      <thead><tr><th class="c-on">Activa</th><th>Handle</th><th>Nombre / nota</th><th>Listas</th><th></th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <div class="bar pager"><button id="prev">← Anterior</button><span id="page" class="muted"></span><button id="next">Siguiente →</button></div>
+  </section>
+
+  <!-- LISTAS -->
+  <section id="tab-lists" hidden>
+    <p class="muted">Una cuenta con etiquetas se filtra si <b>al menos una</b> de sus listas está activa. Las cuentas sin etiquetas siempre se filtran. Apagar una lista no borra nada.</p>
+    <div id="lists"></div>
+  </section>
+
+  <!-- REGLAS -->
+  <section id="tab-rules" hidden>
+    <p class="muted">Reglas adicionales además de la lista de cuentas. Ejemplos: handle <code>*promo*</code> (comodín), nombre visible o biografía que contenga <code>vendo seguidores</code>, texto que coincida con una expresión regular, idioma <code>ja</code>. Nombre y biografía se leen de la API de X y se aplican al autor (y a la cuenta citada si activas las citas). Las reglas de texto son las más propensas a falsos positivos.</p>
+    <form id="ruleForm" class="bar">
+      <select id="rKind" aria-label="Aplicar a">
+        <option value="handle">Handle</option><option value="name">Nombre visible</option><option value="bio">Biografía</option><option value="text">Texto de la publicación</option><option value="lang">Idioma (es, en…)</option>
+      </select>
+      <select id="rMode" aria-label="Tipo de coincidencia">
+        <option value="glob">Comodín (*)</option><option value="contains">Contiene</option><option value="regex">Expresión regular</option>
+      </select>
+      <input type="text" id="rPattern" placeholder="Patrón" aria-label="Patrón" required>
+      <input type="text" id="rNote" placeholder="Nota (opcional)" aria-label="Nota">
+      <button class="primary" type="submit">Añadir regla</button>
+    </form>
+    <div id="ruleMsg" class="muted" role="status"></div>
+    <table>
+      <thead><tr><th class="c-on">Activa</th><th>Aplica a</th><th>Coincidencia</th><th>Patrón</th><th>Nota</th><th></th></tr></thead>
+      <tbody id="ruleRows"></tbody>
+    </table>
+    <h3>Probar</h3>
+    <div class="bar">
+      <input type="text" id="tHandle" placeholder="handle" aria-label="Handle de prueba">
+      <input type="text" id="tName" placeholder="nombre visible" aria-label="Nombre de prueba">
+      <input type="text" id="tText" placeholder="texto" aria-label="Texto de prueba" class="grow">
+      <button id="tRun">Probar</button>
+    </div>
+    <div id="tOut" class="muted" role="status"></div>
+  </section>
+
+  <!-- LISTA BLANCA -->
+  <section id="tab-allow" hidden>
+    <p class="muted">Cuentas que <b>nunca</b> se ocultan, aunque coincidan con la lista o con una regla.</p>
+    <form id="allowForm" class="bar">
+      <input type="text" id="allowHandle" placeholder="@handle" aria-label="Handle a exceptuar">
+      <button class="primary" type="submit">Añadir excepción</button>
+    </form>
+    <ul id="allowRows" class="chips"></ul>
+  </section>
+
+  <!-- AJUSTES -->
+  <section id="tab-settings" hidden>
+    <div class="form">
+      <label>Modo
+        <select id="sMode">
+          <option value="hide">Ocultar: quitar de la respuesta de la API (y del DOM como respaldo)</option>
+          <option value="collapse">Colapsar con barra (clic para ver)</option>
+          <option value="highlight">Resaltar: dejar visible pero marcada</option>
+        </select>
+      </label>
+      <label class="chk"><input type="checkbox" id="sDeep"> Filtro en origen: en modo Ocultar, quitar las publicaciones de las respuestas de X antes de que se pinten (recomendado; los cambios aplican a lo que X cargue desde ahora)</label>
+      <fieldset><legend>Qué cuenta como coincidencia</legend>
+        <label class="chk"><input type="checkbox" id="sAuthor" checked disabled> Autor de la publicación (siempre)</label>
+        <label class="chk"><input type="checkbox" id="sReposters"> Reposts y actividad hechos por una cuenta listada ("X reposteó")</label>
+        <label class="chk"><input type="checkbox" id="sQuoted"><span>Publicaciones que <b>citan</b> a una cuenta listada</span></label>
+        <label class="chk"><input type="checkbox" id="sReplies"> Respuestas dirigidas a una cuenta listada</label>
+        <label class="chk"><input type="checkbox" id="sMentions"><span>Publicaciones que <b>mencionan</b> a una cuenta listada</span></label>
+        <label class="chk"><input type="checkbox" id="sUserCells"> Cuentas listadas en sugerencias y listados de personas</label>
+      </fieldset>
+      <fieldset><legend>Dónde se filtra</legend>
+        <div id="scopes" class="scopes"></div>
+      </fieldset>
+      <fieldset><legend>Excepciones</legend>
+        <label class="chk"><input type="checkbox" id="sPause"> No filtrar dentro del perfil de la propia cuenta listada</label>
+        <label class="chk"><input type="checkbox" id="sFocal"> No ocultar la publicación que abro directamente (enlace a /status/…)</label>
+      </fieldset>
+      <p class="muted">Atajos de teclado (Alt+Shift+M pausa/reanuda, Alt+Shift+H alterna ocultar/resaltar): se cambian en <code>chrome://extensions/shortcuts</code>.</p>
+    </div>
+  </section>
+
+  <!-- ESTADÍSTICAS -->
+  <section id="tab-stats" hidden>
+    <p class="muted" id="statsSummary"></p>
+    <div class="cols">
+      <div><h3>Por motivo</h3><table><tbody id="statsRoles"></tbody></table></div>
+      <div><h3>Últimos días</h3><table><tbody id="statsDays"></tbody></table></div>
+    </div>
+    <h3>Cuentas más filtradas</h3>
+    <table><tbody id="statsTop"></tbody></table>
+    <div class="bar"><button id="statsReset" class="danger">Reiniciar contadores</button></div>
+  </section>
+
+  <!-- DATOS -->
+  <section id="tab-data" hidden>
+    <div class="form">
+      <p id="seedInfo" class="muted"></p>
+      <div class="bar">
+        <button id="reseed">Fusionar lista inicial</button>
+        <span class="muted">Añade cuentas nuevas y actualiza las que no hayas tocado. No pisa tus ediciones.</span>
+      </div>
+      <div class="bar">
+        <button id="export">Exportar configuración (JSON)</button>
+        <button id="importBtn">Importar…</button>
+        <input type="file" id="importFile" accept="application/json" hidden>
+      </div>
+      <div class="bar">
+        <button id="reset" class="danger">Restablecer todo</button>
+      </div>
+      <div id="dataMsg" class="muted" role="status"></div>
+    </div>
+  </section>
+</main>
+
+<script src="../src/matcher.js"></script>
+<script src="../src/store.js"></script>
+<script src="options.js"></script>
+</body>
+</html>

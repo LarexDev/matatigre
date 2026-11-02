@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>MATATIGRE V.1</title>
+<link rel="stylesheet" href="ui.css">
+<link rel="stylesheet" href="popup.css">
+</head>
+<body>
+<header>
+  <div class="brand"><img src="../icons/logo.svg" width="36" height="36" alt=""><div><strong>MATATIGRE V.1</strong><div id="status" class="muted"></div></div></div>
+  <label class="switch" title="Activar o pausar el filtrado"><input type="checkbox" id="enabled" aria-label="Filtrado activo"><span></span></label>
+</header>
+
+<section class="stats">
+  <div><b id="hidden">–</b><span class="muted">ocultas en esta vista</span></div>
+  <div><b id="accounts">–</b><span class="muted">cuentas activas</span></div>
+</section>
+
+<div id="apiState" class="pill" role="status"></div>
+
+<section>
+  <label class="row">Modo
+    <select id="mode">
+      <option value="hide">Ocultar (quitar de la respuesta)</option>
+      <option value="collapse">Colapsar (clic para ver)</option>
+      <option value="highlight">Resaltar (sólo marcar)</option>
+    </select>
+  </label>
+  <label class="chk"><input type="checkbox" id="qQuoted"> Ocultar citas de cuentas listadas</label>
+  <label class="chk"><input type="checkbox" id="qReposters"> Ocultar reposts de cuentas listadas</label>
+  <label class="chk"><input type="checkbox" id="qReplies"> Ocultar respuestas a cuentas listadas</label>
+  <label class="chk"><input type="checkbox" id="qMentions"> Ocultar menciones de cuentas listadas</label>
+</section>
+
+<section>
+  <form id="add" class="row">
+    <input type="text" id="handle" placeholder="@handle o URL de perfil" autocomplete="off" spellcheck="false" aria-label="Handle a añadir">
+    <button class="primary" type="submit">Añadir</button>
+  </form>
+  <button id="addPage" class="link" hidden></button>
+  <div id="msg" class="muted" role="status"></div>
+</section>
+
+<section>
+  <div class="muted small">Ocultadas recientemente</div>
+  <ul id="recent"></ul>
+</section>
+
+<footer class="row">
+  <button id="options">Gestionar lista y reglas…</button>
+  <button id="diag" class="link" title="Copia al portapapeles un informe técnico de lo que ve la extensión en esta pestaña">Copiar diagnóstico</button>
+</footer>
+<script src="../src/matcher.js"></script>
+<script src="../src/store.js"></script>
+<script src="popup.js"></script>
+</body>
+</html>

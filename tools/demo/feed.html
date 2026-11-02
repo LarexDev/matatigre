@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Timeline de demostración</title>
+<style>
+  :root{--bg:#0f1419;--card:#16181c;--line:#2f3336;--fg:#e7e9ea;--muted:#71767b;--accent:#1d9bf0}
+  *{box-sizing:border-box;margin:0}
+  body{background:var(--bg);color:var(--fg);font:15px/1.35 "Segoe UI",system-ui,sans-serif;display:flex;justify-content:center}
+  main{width:600px;border-left:1px solid var(--line);border-right:1px solid var(--line);min-height:100vh}
+  header{position:sticky;top:0;background:rgba(15,20,25,.92);border-bottom:1px solid var(--line);display:flex}
+  header span{flex:1;text-align:center;padding:16px 0;font-weight:700;color:var(--muted)}
+  header span.on{color:var(--fg);box-shadow:inset 0 -4px 0 var(--accent)}
+  ul{list-style:none;padding:0}
+  li{border-bottom:1px solid var(--line)}
+  [role=link][data-href]{display:block;cursor:pointer}
+  article{display:flex;flex-direction:column}
+  .row{display:flex;gap:12px;padding:14px 16px}
+  .av{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-weight:700;color:#fff;font-size:18px}
+  .body{flex:1;min-width:0}
+  .head a{color:inherit;text-decoration:none}
+  .head .n{font-weight:700}
+  .head .h,.head .t{color:var(--muted)}
+  .text{margin-top:2px}
+  .text a{color:var(--accent);text-decoration:none}
+  .q{margin-top:10px;border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+  .q a{color:inherit;text-decoration:none}
+  .q .n{font-weight:700}.q .h{color:var(--muted)}
+  .acts{display:flex;gap:46px;margin-top:10px;color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<main>
+  <header><span class="on">Para ti</span><span>Siguiendo</span></header>
+  <ul id="feed"></ul>
+</main>
+<script>
+// Cuentas y publicaciones FICTICIAS. La estructura de enlaces imita la de X (li > [role=link][data-href] > article).
+const COLORS = ['#7856ff', '#00ba7c', '#f91880', '#ff7a00', '#1d9bf0', '#8b5cf6', '#14b8a6', '#e11d48'];
+const posts = [
+    { h: 'ana_torres', n: 'Ana Torres', t: '2 h', x: 'Buenos días. ¿Alguien recomienda una buena cafetería por el centro? ☕' },
+    { h: 'ejemplo_uno', n: 'Ejemplo Uno', t: '3 h', x: '¡Gran anuncio! Mañana a las 8 pm hablamos de todo. No se lo pierdan.' },
+    { h: 'luis_mora', n: 'Luis Mora', t: '3 h', x: 'Totalmente de acuerdo con esto 👇', q: { h: 'ejemplo_dos', n: 'Ejemplo Dos', x: 'Lo repito: esto es lo único importante.' } },
+    { h: 'clara_ruiz', n: 'Clara Ruiz', t: '4 h', x: 'Nuevo hilo sobre rutas de senderismo cerca de la ciudad. Guardad este para el fin de semana 🥾' },
+    { h: 'bot_promo', n: 'Promo Total', t: '5 h', x: 'SORTEO URGENTE: sigue y comparte para ganar. 🎁🎁🎁' },
+    { h: 'pablo_gil', n: 'Pablo Gil', t: '6 h', x: 'Terminé el maratón de series. Recomiendo la tercera temporada de la que les conté.' },
+    { h: 'mar_vidal', n: 'Mar Vidal', t: '7 h', x: 'Cinco libros cortos para leer en una tarde. Abro hilo 📚' }
+];
+const feed = document.getElementById('feed');
+posts.forEach((p, i) => {
+    const id = String(910000000 + i * 137);
+    const li = document.createElement('li');
+    li.innerHTML = `<div role="link" data-href="/${p.h}/status/${id}" tabindex="0"><article><div class="row">
+      <div class="av" style="background:${COLORS[i % COLORS.length]}">${p.n[0]}</div>
+      <div class="body">
+        <div class="head"><a href="/${p.h}"><span class="n">${p.n}</span></a> <a href="/${p.h}"><span class="h">@${p.h}</span></a> <span class="t">· <a href="/${p.h}/status/${id}">${p.t}</a></span></div>
+        <div class="text">${p.x}</div>
+        ${p.q ? `<div class="q" role="link" tabindex="0"><a href="/${p.q.h}"><span class="n">${p.q.n}</span> <span class="h">@${p.q.h}</span></a> <a href="/${p.q.h}/status/${id}9">· 1 d</a><div>${p.q.x}</div></div>` : ''}
+        <div class="acts"><span>💬 12</span><span>🔁 48</span><span>♡ 301</span><span>⇪</span></div>
+      </div></div></article></div>`;
+    feed.append(li);
+});
+
+// Una respuesta GraphQL de juguete (el servidor de pruebas hace eco): activa la lectura de la API para la demostración.
+const user = h => ({ rest_id: 'u' + h, core: { screen_name: h, name: h }, profile_bio: { description: '' } });
+const tweet = (id, h) => ({ __typename: 'Tweet', rest_id: String(id), core: { user_results: { result: user(h) } }, details: { full_text: 'demo' }, legacy: { entities: {}, lang: 'es' } });
+const entry = (id, h) => ({ entryId: 'tweet-' + id, content: { itemContent: { tweet_results: { result: tweet(id, h) } } } });
+setTimeout(() => {
+    fetch('/i/api/graphql/demo/HomeTimeline', { method: 'POST', body: JSON.stringify({ data: { home: { home_timeline_urt: { instructions: [{ type: 'TimelineAddEntries', entries: [entry(1, 'ana_torres'), entry(2, 'ejemplo_uno')] }] } } } }) }).catch(() => {});
+}, 600);
+</script>
+</body>
+</html>
