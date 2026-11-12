@@ -10,7 +10,7 @@ esperas ni de que no oculte contenido que no esperas. Puede contener errores.
 
 ## 2. Uso bajo tu propia responsabilidad
 
-El autor **no se hace responsable** del uso que hagas de la extensión ni de sus consecuencias. En particular, y en la
+El proyecto **no se hace responsable** del uso que hagas de la extensión ni de sus consecuencias. En particular, y en la
 máxima medida que permita la ley aplicable, no responde de:
 
 - restricciones, limitaciones o suspensión de tu cuenta de X, o de cualquier medida tomada por X Corp. o terceros;
@@ -72,7 +72,7 @@ Las cuentas que añadas, importes o recibas de terceros son decisión y responsa
 - Una lista que clasifique a personas por sus opiniones, afiliación política u otras características puede constituir
   **datos personales sensibles**. Si la compartes o publicas, eres responsable de cumplir la normativa de protección de
   datos y de honra e intimidad que te sea aplicable.
-- El autor no verifica ni avala el contenido de ninguna lista de terceros y no responde por su uso.
+- El proyecto no verifica ni avala el contenido de ninguna lista de terceros y no responde por su uso.
 
 ## 5. No es una herramienta de seguridad ni de moderación
 
@@ -81,12 +81,12 @@ X, no sustituye las herramientas de seguridad de la plataforma y no debe usarse 
 
 ## 6. Privacidad
 
-La extensión no envía tus datos a servidores del autor ni de terceros; solo descarga las listas a las que te suscribes (consulta qué conexiones hace en [PRIVACY.md](PRIVACY.md)).
+La extensión no envía tus datos a servidores propios ni de terceros; solo descarga las listas a las que te suscribes (consulta qué conexiones hace en [PRIVACY.md](PRIVACY.md)).
 Además, como parte de su funcionamiento se ejecuta en el contexto de la página de X; las limitaciones también están en ese documento.
 
 ## 7. Cambios y vigencia
 
-El autor puede modificar, retirar o dejar de mantener el proyecto y las listas en cualquier momento, sin obligación de soporte ni
+El proyecto y las listas pueden modificarse, retirarse o dejar de mantenerse en cualquier momento, sin obligación de soporte ni
 de actualizaciones. Si alguna parte de este descargo no fuera aplicable según la ley de tu jurisdicción, el resto sigue
 en vigor. Si no estás de acuerdo con estas condiciones, **no instales ni uses la extensión**.
 

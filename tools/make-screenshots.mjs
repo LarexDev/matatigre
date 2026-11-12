@@ -171,6 +171,10 @@ try {
     await ext1.eval(`(() => {
         const m = document.querySelector('extensions-manager').shadowRoot;
         m.querySelector('extensions-review-panel')?.style.setProperty('display', 'none');
+        // el panel lateral de Chrome con avisos propios (agentes, tienda…) no pinta nada en la captura: se oculta
+        const RE = /agentes de programaci/i;
+        const hide = root => { for (const e of root.querySelectorAll('*')) { if (e.shadowRoot) hide(e.shadowRoot); if (RE.test(e.textContent || '') && ![...e.children].some(c => RE.test(c.textContent || ''))) e.style.setProperty('display', 'none', 'important'); } };
+        hide(m);
     })()`);
     await sleep(300);
     await ext1.eval(annotate(`() => {

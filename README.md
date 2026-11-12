@@ -170,7 +170,7 @@ Los detalles técnicos están en [docs/DESARROLLO.md](docs/DESARROLLO.md).
 
 ## Licencia y aviso legal
 
-El software se ofrece tal cual, sin garantía de ningún tipo. El autor no se hace responsable del uso que se le dé ni de sus
+El software se ofrece tal cual, sin garantía de ningún tipo. El proyecto no se hace responsable del uso que se le dé ni de sus
 consecuencias, entre ellas posibles restricciones de tu cuenta por parte de X, contenido que no se oculte o que se oculte por
 error, o cualquier otro daño. El uso es bajo tu propia responsabilidad. El texto completo está en [DISCLAIMER.md](DISCLAIMER.md)
 y la licencia es [MIT](LICENSE).
