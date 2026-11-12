@@ -43,9 +43,17 @@ Debe aparecer la tarjeta **MATATIGRE V.1** con el interruptor activado y sin err
 > **Aviso normal de Chrome.** Al instalar una extensión desde una carpeta, Chrome puede mostrar *"Chrome no puede verificar de
 > dónde proviene esta extensión"* o *"Revisa 1 extensión que podría no ser segura"*, y al abrir el navegador un aviso sobre
 > extensiones en modo desarrollador. Es el comportamiento esperado para extensiones que no vienen de la Web Store; puedes
-> cerrarlo. La extensión no hace peticiones de red: consulta [PRIVACY.md](../PRIVACY.md).
+> cerrarlo. La única conexión de red que hace la extensión es la descarga de listas, y solo si tú la aceptas: consulta [PRIVACY.md](../PRIVACY.md).
 
-### 5 · Empieza a usarla
+### 5 · Elige tus listas
+
+Al cargar la extensión se abre una **pantalla de bienvenida** con las listas disponibles. Marca las que quieras y pulsa **Empezar**. Si la cierras sin elegir, puedes volver a ellas en *Opciones → Listas → Más listas*.
+
+![Pantalla de bienvenida](img/bienvenida.png)
+
+Si no quieres ninguna, pulsa **Ahora no** y añade tus propias cuentas.
+
+### 6 · Empieza a usarla
 
 1. Abre [x.com](https://x.com) y **recarga con `F5`** (la extensión se engancha al cargar la página).
 2. Fija el icono: puzzle de la barra de Chrome → alfiler junto a *MATATIGRE V.1*.
@@ -67,8 +75,8 @@ Debe aparecer la tarjeta **MATATIGRE V.1** con el interruptor activado y sin err
 2. En `chrome://extensions`, pulsa el botón **Recargar** (flecha circular) de la tarjeta.
 3. **Recarga x.com (F5)** en todas las pestañas abiertas.
 
-Tu configuración (cuentas, reglas, ajustes) se conserva al actualizar. Si instalas desde **otra carpeta** como una
-instalación nueva, la configuración empieza vacía: usa *Opciones → Datos → Exportar* antes y *Importar* después.
+Tu configuración (cuentas, listas suscritas, reglas, ajustes) se conserva al actualizar. **Al pasar de la 1.x a la 2.x** se abre la pantalla de bienvenida para que elijas si pasas a las listas que se actualizan solas (ver [el manual](USO.md#primer-uso-la-bienvenida)); mientras no decidas, tus cuentas siguen funcionando. Si instalas desde **otra carpeta** como una
+instalación nueva, la configuración empieza vacía: usa *Opciones → Copia y datos → Exportar* antes y *Importar* después.
 
 ## Desinstalar
 
@@ -86,9 +94,11 @@ instalación nueva, la configuración empieza vacía: usa *Opciones → Datos �
 | El popup dice *"Aún sin datos de la API de X"* | **Recarga x.com (F5)**. La extensión se engancha al cargar la página. |
 | El popup dice *"La página no responde"* | Recarga la pestaña de X; si persiste, recarga la extensión y la pestaña. |
 | Añadí una cuenta y la sigo viendo | Mira si estás en **su perfil** (se muestra a propósito) o si la lista a la que pertenece está apagada (Opciones → Listas). Recarga la pestaña. |
-| Veo citas o reposts de cuentas de mi lista | Revisa en *Opciones → Ajustes* que estén activas esas casillas. Si sigue, popup → **Copiar diagnóstico** y abre un [issue](https://github.com/LarexDev/matatigre/issues/new/choose). |
+| Veo citas o reposts de cuentas de mi lista | Revisa en *Opciones → Ajustes* que estén activas esas casillas. Si sigue, *Opciones → Copia y datos → Copiar informe para soporte* y abre un [issue](https://github.com/LarexDev/matatigre/issues/new/choose). |
 | Dejó de funcionar tras una actualización de X | X cambió su sitio. Abre un issue con el diagnóstico; puede requerir una actualización. |
+| No veo ninguna lista / la bienvenida dice que no se pudo cargar el catálogo | Falta conexión o GitHub no responde. Pulsa *Reintentar*, o entra en *Opciones → Listas → Más listas* más tarde. Sin conexión la extensión sigue con la última copia que descargó. |
+| *Opciones → Listas* muestra un error en una lista | Se usa la última copia buena. Pulsa *Actualizar*; si persiste, el archivo del servidor puede no ser válido. |
 | Chrome avisa de "extensiones en modo desarrollador" al abrir | Es un aviso normal para extensiones sin empaquetar; puedes cerrarlo. |
 
-Si ninguna solución sirve: popup → **Copiar diagnóstico** (no incluye el contenido de tu timeline, solo contadores y la
+Si ninguna solución sirve: *Opciones → Copia y datos → Copiar informe para soporte* (no incluye el contenido de tu timeline, solo contadores y la
 estructura de la página) y pégalo en un [issue nuevo](https://github.com/LarexDev/matatigre/issues/new/choose).

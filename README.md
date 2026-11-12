@@ -11,7 +11,7 @@
 <p align="center">
   <a href="LICENSE"><img alt="Licencia MIT" src="https://img.shields.io/badge/licencia-MIT-2ea44f"></a>
   <img alt="Manifest V3" src="https://img.shields.io/badge/Chrome-Manifest%20V3-1d9bf0">
-  <img alt="Versión 1.2.0" src="https://img.shields.io/badge/versi%C3%B3n-1.2.0-f08a24">
+  <img alt="Versión 2.0.0" src="https://img.shields.io/badge/versi%C3%B3n-2.0.0-f08a24">
 </p>
 
 <p align="center">
@@ -36,18 +36,20 @@ MATATIGRE cambia lo que tu navegador muestra de X. Tú eliges las cuentas que no
 publicaciones, los reposts que hacen y las citas a sus posts. Si lo activas, también oculta las respuestas dirigidas a esas
 cuentas y las menciones.
 
-Funciona en tu navegador: no usa servidores, no recopila datos y no tiene dependencias. La configuración se guarda en el
+Funciona en tu navegador: no usa servidores propios, no recopila datos y no descarga ningún código: todo va dentro de la extensión. La configuración se guarda en el
 propio Chrome.
 
-Incluye una lista inicial de 204 cuentas públicas repartidas en cinco listas (ver [docs/LISTAS.md](docs/LISTAS.md)). Puedes
-apagar cualquiera de ellas, editarlas o reemplazarlas por la tuya.
+La extensión no trae cuentas incluidas. Te suscribes a **listas** que se descargan de un [repositorio de datos aparte](https://github.com/LarexDev/matatigre-listas)
+y se actualizan solas cada 12 horas, así que no hace falta reinstalarla cuando una lista cambia. Al abrirla por primera vez, una pantalla de
+bienvenida te muestra las listas disponibles. También puedes crear tus propias cuentas, o suscribirte a una lista publicada por otra persona
+con su URL (ver [docs/LISTAS.md](docs/LISTAS.md)).
 
 ## Instalación
 
 Hace falta Chrome 111 o superior. También funciona en Edge, Brave y otros navegadores basados en Chromium. Como no está en
 la Chrome Web Store, se instala como extensión sin empaquetar. Son unos minutos.
 
-**1. Descarga y descomprime.** En [Releases](https://github.com/LarexDev/matatigre/releases) descarga `matatigre-v1.2.0.zip` y
+**1. Descarga y descomprime.** En [Releases](https://github.com/LarexDev/matatigre/releases) descarga `matatigre-v2.0.0.zip` y
 descomprímelo en una carpeta que no vayas a borrar (por ejemplo `Documentos\matatigre`), porque Chrome la carga desde ahí.
 Si prefieres el código fuente, clona el repositorio con `git clone https://github.com/LarexDev/matatigre.git` y usa la carpeta `extension`.
 
@@ -64,7 +66,12 @@ el archivo `manifest.json`.
 
 <p align="center"><img src="docs/img/instalar-3-extension-instalada.png" alt="Paso 3: la extensión instalada en chrome://extensions" width="860"></p>
 
-**5. Abre [x.com](https://x.com) y recarga con F5.** Para tener el icono a mano, fíjalo desde el icono del puzzle de la barra de Chrome.
+**5. Elige tus listas.** Al instalar se abre una pantalla de bienvenida con las listas disponibles. Marca las que quieras y pulsa
+*Empezar*.
+
+<p align="center"><img src="docs/img/bienvenida.png" alt="Pantalla de bienvenida con las listas disponibles" width="520"></p>
+
+**6. Abre [x.com](https://x.com) y recarga con F5.** Para tener el icono a mano, fíjalo desde el icono del puzzle de la barra de Chrome.
 
 La guía completa, con la actualización, la desinstalación y los problemas más comunes, está en [docs/INSTALACION.md](docs/INSTALACION.md).
 
@@ -74,32 +81,33 @@ La guía completa, con la actualización, la desinstalación y los problemas má
 
 1. Pulsa el icono del tigre. Cuando X haya cargado contenido, el popup dirá "Lectura de la API de X activa".
 2. Para añadir una cuenta, escribe su `@usuario` (o pega la URL de su perfil) y pulsa *Añadir*. También puedes abrir el perfil
-   y usar el botón *Añadir @usuario (perfil abierto)*.
+   y usar el botón *Añadir @usuario*, o pasar el ratón sobre cualquier publicación en X y pulsar el icono de MATATIGRE que aparece en la esquina de la publicación: elige una lista (o crea una nueva) y listo, con *Deshacer*.
 3. Vuelve a tu Inicio: sus publicaciones ya no deberían aparecer.
 4. Elige el modo (ocultar, colapsar o resaltar) y marca qué más debe contar: citas, reposts, respuestas o menciones.
 5. En *Ocultadas recientemente* puedes ver qué se filtró y por qué, lo que ayuda a detectar errores.
-6. *Gestionar lista y reglas* abre la página de opciones.
+6. *Opciones* abre la página de configuración.
 
-La lista inicial se hizo a partir de información pública y puede tener errores, así que conviene revisarla en
-*Opciones → Cuentas*. Las listas de Petro, Petristas y Antipetristas vienen apagadas; se encienden en *Opciones → Listas*.
-Si eres titular de una cuenta incluida y quieres que se corrija o se retire, abre un
-[issue](https://github.com/LarexDev/matatigre/issues/new/choose).
+Revisa las listas en *Opciones → Listas*: cada lista se enciende o apaga entera y, en las sincronizadas (solo lectura), cualquier cuenta se puede omitir solo para ti. Si eres titular de una cuenta incluida y quieres que se corrija o se retire, abre un
+[issue en el repositorio de listas](https://github.com/LarexDev/matatigre-listas/issues/new/choose).
 
 <br clear="right">
 
 ## Configuración
 
-<p align="center"><img src="docs/img/opciones-cuentas.png" alt="Página de opciones: cuentas" width="780"></p>
+<p align="center"><img src="docs/img/opciones-listas.png" alt="Página de opciones: listas propias y sincronizadas" width="780"></p>
 
 | Qué | Opciones |
 | --- | --- |
-| Modo | Ocultar (se quita antes de mostrarse), colapsar (queda una barra con el motivo y un clic la abre) o resaltar (se ve, pero marcada). |
+| Modo | Ocultar (se quita antes de mostrarse), colapsar (queda una barra con el motivo y un clic la abre) o resaltar (se ve, pero marcada). Hay un modo general y cada lista puede tener el suyo; si hay conflicto, gana el más restrictivo. Un contador discreto indica cuántas publicaciones se ocultaron en la vista. |
 | Qué cuenta como coincidencia | El autor siempre. Opcionalmente los reposts, las citas, las respuestas, las menciones y las sugerencias de cuentas. |
 | Reglas | Sobre el usuario, el nombre, la biografía, el texto y el idioma, con comodín (`bot_*`), "contiene" o expresión regular. Hay un probador. |
-| Dónde se filtra | Un interruptor por sección: Inicio, Búsqueda, Perfiles, Publicación abierta e hilos, Listas, Notificaciones, Guardados y otras. |
-| Excepciones | Lista blanca; no filtrar dentro del perfil de la propia cuenta; no ocultar la publicación que abres directamente. |
-| Listas | Agrupan cuentas por etiqueta y se encienden o apagan enteras. |
+| En qué partes de X | Un interruptor por sección: Inicio, Búsqueda, Perfiles, Publicación abierta e hilos, Listas, Notificaciones, Guardados y otras. |
+| Cuándo no ocultar | «Siempre mostrar» (pestaña aparte: cuentas que nunca se ocultan); no ocultar dentro del perfil de la propia cuenta ni la publicación que abres directamente. |
+| Listas | Te suscribes a listas del catálogo o de una URL propia; se actualizan solas y se encienden o apagan enteras. Tus cuentas propias van aparte y no se tocan. |
+| Modo analista | Apagado por defecto. Al activarlo en *Ajustes* aparece la pestaña *Análisis* y se enciende el registro. Quien no lo necesita no ve nada de esto. |
+| Análisis | Con el modo analista, toma tus listas como punto de partida y reconstruye la red a su alrededor: quién interactúa con quién (también las cuentas externas que las responden, citan o amplifican), qué comunidades forman, qué cuentas son relevantes y cómo se originan y propagan las narrativas. Cada hallazgo muestra las cuentas, las publicaciones de evidencia y los criterios; la sincronía se contrasta con un modelo de azar y se controlan los falsos descubrimientos. Mapa de relaciones interactivo, expedientes con evidencia anclada, informe e integridad verificable. |
 | Estadísticas | Total, por motivo, por día y cuentas más filtradas. |
+| Registro local | Solo con el modo analista (apagado por defecto): guarda en tu equipo lo que publican las cuentas de tus listas y lo que otras cuentas les responden, citan, repostean o mencionan, para analizarlo. No sale de tu navegador. |
 | Copia de seguridad | Exportar e importar en JSON, con validación. |
 | Atajos | `Alt+Shift+M` pausa o reanuda; `Alt+Shift+H` alterna entre ocultar y resaltar. Se pueden cambiar en `chrome://extensions/shortcuts`. |
 
@@ -107,8 +115,16 @@ Por defecto se filtran el autor, los reposts y las citas; las respuestas y las m
 El manual completo está en [docs/USO.md](docs/USO.md). Las capturas usan cuentas ficticias.
 
 <details>
-<summary>Más capturas: reglas, ajustes y estadísticas</summary>
+<summary>Más capturas: listas, análisis, reglas, ajustes y estadísticas</summary>
 
+<p align="center"><img src="docs/img/opciones-analisis.png" alt="Análisis: resumen y hallazgos" width="780"></p>
+<p align="center"><img src="docs/img/opciones-mapa.png" alt="Análisis: mapa de relaciones y comunidades" width="780"></p>
+<p align="center"><img src="docs/img/opciones-detalle.png" alt="Análisis: panel de detalle de una cuenta" width="780"></p>
+<p align="center"><img src="docs/img/opciones-narrativas.png" alt="Análisis: narrativas con su curva de propagación" width="780"></p>
+<p align="center"><img src="docs/img/opciones-temas.png" alt="Análisis: temas definidos por la persona" width="780"></p>
+<p align="center"><img src="docs/img/opciones-oscuro-analisis.png" alt="Análisis en modo oscuro" width="780"></p>
+<p align="center"><img src="docs/img/opciones-sincronizada.png" alt="Página de opciones: lista sincronizada (solo lectura)" width="780"></p>
+<p align="center"><img src="docs/img/opciones-oscuro.png" alt="Página de opciones en modo oscuro" width="780"></p>
 <p align="center"><img src="docs/img/opciones-reglas.png" alt="Página de opciones: reglas" width="780"></p>
 <p align="center"><img src="docs/img/opciones-ajustes.png" alt="Página de opciones: ajustes" width="780"></p>
 <p align="center"><img src="docs/img/opciones-estadisticas.png" alt="Página de opciones: estadísticas" width="780"></p>
@@ -130,9 +146,10 @@ Los detalles técnicos están en [docs/DESARROLLO.md](docs/DESARROLLO.md).
 ## Limitaciones
 
 - X puede cambiar su sitio o su API en cualquier momento y dejar la extensión sin funcionar, total o parcialmente. Si algo se
-  cuela, usa *Copiar diagnóstico* en el popup y abre un [issue](https://github.com/LarexDev/matatigre/issues/new/choose).
+  cuela, usa *Opciones → Copia y datos → Copiar informe para soporte* y abre un [issue](https://github.com/LarexDev/matatigre/issues/new/choose).
 - Los cambios de configuración se aplican a lo que X cargue desde ese momento. Para que valgan para todo, recarga la pestaña.
 - Una lista de usuarios no sigue a las personas: si una cuenta cambia de nombre de usuario, deja de coincidir.
+- Las listas se descargan de GitHub. Si no hay conexión o el servidor falla, la extensión sigue con la última copia que descargó.
 - No filtra mensajes directos ni contenido que sea solo imagen. Tampoco silencia ni bloquea en X: solo cambia lo que ve tu navegador.
 - Las reglas de texto, nombre y biografía pueden ocultar de más. Conviene probarlas antes con el probador.
 - Se probó con pruebas automáticas y con la estructura de X que se puede ver sin iniciar sesión. Con sesión iniciada puede haber diferencias.
@@ -143,7 +160,8 @@ Los detalles técnicos están en [docs/DESARROLLO.md](docs/DESARROLLO.md).
 | --- | --- |
 | [docs/INSTALACION.md](docs/INSTALACION.md) | Instalación paso a paso, actualización, desinstalación y problemas comunes |
 | [docs/USO.md](docs/USO.md) | Manual de uso |
-| [docs/LISTAS.md](docs/LISTAS.md) | La lista inicial y el formato de las listas |
+| [docs/LISTAS.md](docs/LISTAS.md) | Listas suscribibles, cómo publicar una propia y el formato de importación |
+| [Repositorio de listas](https://github.com/LarexDev/matatigre-listas) | El catálogo y las listas, con el formato y cómo pedir una corrección o un retiro |
 | [docs/DESARROLLO.md](docs/DESARROLLO.md) | Arquitectura, pruebas, empaquetado y publicación |
 | [PRIVACY.md](PRIVACY.md) | Qué datos guarda la extensión y qué permisos usa |
 | [DISCLAIMER.md](DISCLAIMER.md) | Descargo de responsabilidad |

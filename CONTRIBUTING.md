@@ -1,11 +1,11 @@
 # Contribuir
 
-¡Gracias por el interés! Este proyecto es pequeño y busca seguir siéndolo: JavaScript puro, sin dependencias, sin servidores.
+¡Gracias por el interés! Este proyecto es pequeño y busca seguir siéndolo: JavaScript puro, sin servidores y sin dependencias que instalar (las dos librerías de gráficos del análisis van incluidas tal cual en `extension/vendor/`).
 
 ## Antes de abrir un issue
 
 - Lee el [manual de uso](docs/USO.md) y la sección de [problemas frecuentes](docs/INSTALACION.md#problemas-frecuentes).
-- Si algo no se oculta o se oculta de más, adjunta el **diagnóstico**: popup → *Copiar diagnóstico*. No contiene el
+- Si algo no se oculta o se oculta de más, adjunta el **diagnóstico**: *Opciones → Copia y datos → Copiar informe para soporte*. No contiene el
   contenido de tu timeline. Revisa el texto antes de pegarlo.
 - No publiques listas de personas ni datos personales en issues o pull requests.
 
@@ -19,7 +19,7 @@
 
 ## Fuera de alcance
 
-- Altas de cuentas en la lista inicial incluida (solo se aceptan **correcciones y retiros**, mediante el issue «Retiro o corrección de una cuenta»).
+- Cuentas y listas: viven en el repositorio [matatigre-listas](https://github.com/LarexDev/matatigre-listas), no aquí. Allí se piden correcciones, retiros y propuestas (el curador decide qué entra).
 - Telemetría, cuentas de usuario, servidores o cualquier envío de datos.
 - Funciones de acoso, seguimiento o recopilación de información de terceros.
 
