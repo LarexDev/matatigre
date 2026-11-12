@@ -23,11 +23,12 @@ window.chrome = {
         },
         onChanged: { addListener: f => listeners.push(f) }
     },
-    runtime: { onMessage: { addListener: f => { window.__onMsg = f; } }, sendMessage: async () => {}, getURL: p => p }
+    runtime: { id: 'mt-test', onMessage: { addListener: f => { window.__onMsg = f; } }, sendMessage: async () => {}, getURL: p => p }
 };
 window.__ask = type => new Promise(res => window.__onMsg({ type }, null, res));
 </script>
 <script src="../extension/src/matcher.js"></script>
+<script src="../extension/src/mylists.js"></script>
 <script src="../extension/src/store.js"></script>
 <script src="../extension/src/page-script.js"></script>
 <script>
@@ -76,6 +77,8 @@ const baseConfig = (over = {}) => ({
         ...(over.accounts || {})
     },
     lists: { grupoa: true, grupob: false, ...(over.lists || {}) },
+    listModes: over.listModes || {},
+    uids: over.uids || {},
     rules: over.rules || [],
     allowlist: over.allowlist || []
 });
@@ -313,6 +316,7 @@ const EXPECT_KEPT = ['tweet-101', 'conversationthread-8', 'tweet-113', 'tweet-11
         const realRules = JSON.parse(await xhr(gql(), gResp([gEntry(720, gReal(720, 'neutral', 'aquí va la PALABRA clave')), gEntry(721, gReal(721, 'neutral', 'limpio')), gEntry(722, nameTweet)])));
         check('esquema real: reglas de texto (details.full_text) y de nombre (core.name)', JSON.stringify(entryIds(realRules)) === JSON.stringify(['tweet-721']));
         await setConfig(baseConfig());
+        await new Promise(r => setTimeout(r, 400)); // el diagnóstico del script de página se refresca de forma periódica
         const sch = (await __ask('xaf:getDiagnostics')).pageScript;
         check('diagnóstico: informa de claves del tuit y de citas/retweets vistos', sch.tweetKeys.length > 3 && sch.seen.quoted > 0 && sch.seen.retweets > 0, JSON.stringify(sch.seen));
 
@@ -333,6 +337,193 @@ const EXPECT_KEPT = ['tweet-101', 'conversationthread-8', 'tweet-113', 'tweet-11
         check('collapse: la API conserva la entrada', entryIds(keptCollapse).length === 1);
         await setConfig(baseConfig());
 
+        // ================= modo por lista =================
+        await setConfig(baseConfig({ settings: { mode: 'collapse' }, lists: { grupoa: true, grupob: true }, listModes: { grupoa: 'highlight', grupob: 'hide' } }));
+        const mixed = JSON.parse(await xhr(gql(), gResp([
+            gEntry(900, gTweet(900, 'ListadaUno')),                                   // lista en "resaltar": se conserva
+            gEntry(901, gTweet(901, 'grupob1')),                                      // lista en "ocultar": se quita
+            gEntry(902, gTweet(902, 'neutral')),
+            gEntry(903, gTweet(903, 'ListadaUno', { quoted: gTweet(904, 'grupob1') })), // resaltar (autor) + ocultar (cita): gana ocultar
+            gEntry(905, gTweet(905, 'neutral', { quoted: gTweet(906, 'ListadaDos') }))  // solo resaltar: se conserva
+        ])));
+        check('modo por lista: solo se quita de la API lo que va en "ocultar"; el más restrictivo gana', JSON.stringify(entryIds(mixed)) === JSON.stringify(['tweet-900', 'tweet-902', 'tweet-905']), JSON.stringify(entryIds(mixed)));
+        const dText = n => document.getElementById('matatigre-bar') && document.getElementById('matatigre-bar').textContent;
+        await tick(200);
+        check('contador "N ocultas" visible (cuenta lo quitado de la API y lo oculto en el DOM)', /\b[2-9] ocultas/.test(dText() || ''), dText());
+        await setConfig(baseConfig({ settings: { mode: 'highlight' } }));
+        await tick(200);
+        check('en modo resaltar no hay nada "oculto": el contador no aparece', !document.getElementById('matatigre-bar') || document.getElementById('matatigre-bar').hidden);
+        await setConfig(baseConfig({ settings: { showBar: false } }));
+        await tick(100);
+        const barEl = document.getElementById('matatigre-bar');
+        check('el contador se puede apagar en ajustes', !barEl || barEl.hidden || getComputedStyle(barEl).display === 'none');
+        await setConfig(baseConfig());
+
+        // ================= insignia «Añadir» y tarjeta de listas =================
+        const badgeOf = el => el.querySelector('[data-xaf-badge]');
+        const cardEl2 = () => document.getElementById('matatigre-card');
+        const storedNow = async k => (await chrome.storage.local.get(k))[k];
+        const cand = tweetNew({ handle: 'candidata1' });
+        T.append(cand);
+        cand.scrollIntoView({ block: 'center' });
+        await tick(200);
+        const bd = badgeOf(cand);
+        cand.querySelector('article').style.cssText = 'display:block;width:500px';   // el diseño de esta página de pruebas deja los artículos sin ancho
+        cand.querySelector('article').dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+        const bdr = bd && bd.getBoundingClientRect(), car = cand.querySelector('article').getBoundingClientRect();
+        check('insignia: en la esquina superior derecha de la publicación, posicionada sin mover el contenido', bd && /candidata1/.test(bd.title) && bd.parentElement === cand.querySelector('article') && getComputedStyle(bd).position === 'absolute' && bdr.right <= car.right && bdr.left > car.left + car.width / 2 && bdr.top - car.top < 40, bd && JSON.stringify([bdr.right, car.right, bdr.top - car.top]));
+        let navegado = false;
+        cand.addEventListener('click', () => { navegado = true; });
+        bd.click();
+        await tick(100);
+        check('insignia: pulsarla abre la tarjeta y no abre la publicación en X', cardEl2() && !cardEl2().hidden && !navegado && bd.getAttribute('aria-expanded') === 'true');
+        check('tarjeta: ofrece solo las listas propias existentes y no permite crear listas', cardEl2().querySelectorAll('input[type=checkbox]').length >= 2 && !cardEl2().querySelector('input[type=text]') && /candidata1/.test(cardEl2().textContent) && cardEl2().querySelector('.mt-primary').disabled === true);
+        [...cardEl2().querySelectorAll('input[type=checkbox]')].find(i => i.value === 'grupoa').click();
+        check('tarjeta: «Añadir» se activa al elegir una lista', cardEl2().querySelector('.mt-primary').disabled === false);
+        cardEl2().querySelector('.mt-primary').click();
+        await tick(250);
+        const acc1 = ((await storedNow('accounts')) || {}).candidata1;
+        check('tarjeta: guarda la cuenta en la lista elegida, no crea listas y oculta la publicación', acc1 && acc1.enabled === true && acc1.source === 'manual' && acc1.tags.join() === 'grupoa' && !('mi-lista-nueva' in ((await storedNow('lists')) || {})) && !visible(cand), JSON.stringify(acc1));
+        const toast = document.getElementById('matatigre-toast');
+        check('aviso con "Deshacer" tras añadir', toast && !toast.hidden && /candidata1 añadido a «grupoa»/.test(toast.textContent), toast && toast.textContent);
+        toast.querySelector('button').click();
+        await tick(250);
+        check('Deshacer devuelve todo a como estaba (cuenta y visibilidad)', !((await storedNow('accounts')) || {}).candidata1 && visible(cand));
+
+        badgeOf(cand).click();
+        await tick(100);
+        check('tarjeta: recuerda la última lista usada y la deja marcada', cardEl2().querySelector('input[value=grupoa]').checked === true && cardEl2().querySelector('.mt-primary').disabled === false);
+        cardEl2().querySelector('.mt-primary').click();
+        await tick(250);
+        const acc2 = ((await storedNow('accounts')) || {}).candidata1;
+        check('con la lista recordada, «Añadir» guarda la cuenta en ella', acc2 && acc2.tags.join() === 'grupoa' && !visible(cand), JSON.stringify(acc2));
+        document.getElementById('matatigre-toast').querySelector('button').click();
+        await tick(250);
+
+        badgeOf(cand).click();
+        await tick(100);
+        cardEl2().querySelector('.mt-link').click();
+        await tick(250);
+        check('"Siempre mostrar" la deja en la lista blanca', ((await storedNow('allowlist')) || []).includes('candidata1') && visible(cand));
+        document.getElementById('matatigre-toast').querySelector('button').click();
+        await tick(250);
+        check('... y se puede deshacer', !((await storedNow('allowlist')) || []).includes('candidata1') && !!badgeOf(cand));
+
+        badgeOf(cand).click();
+        await tick(100);
+        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+        await tick(50);
+        check('Esc cierra la tarjeta', cardEl2().hidden);
+        const candArt = cand.querySelector('article');
+        badgeOf(cand).remove();
+        candArt.append(Object.assign(document.createElement('a'), { href: '/zz_repintado' }));
+        await tick(100);
+        check('si X repinta la publicación, la insignia se vuelve a poner', !!badgeOf(cand));
+
+        const listedArt = tweetNew({ handle: 'ListadaUno' });
+        T.append(listedArt);
+        await tick(150);
+        check('insignia: no aparece en publicaciones de cuentas que ya se filtran', !badgeOf(listedArt));
+        await setConfig(baseConfig({ allowlist: ['candidata1'] }));
+        check('insignia: tampoco en cuentas de "siempre mostrar"', !badgeOf(cand));
+        await setConfig(baseConfig({ settings: { addButton: false } }));
+        check('insignia: se puede apagar en ajustes', !badgeOf(cand) && !document.querySelector('[data-xaf-badge]'));
+        await setConfig(baseConfig());
+
+        // ================= registro local (observaciones) =================
+        const got = [];
+        document.addEventListener('matatigre:obs', e => got.push(...JSON.parse(e.detail).obs));
+        const rich = (id, uid, h, extra = {}) => ({
+            __typename: 'Tweet', rest_id: String(id),
+            core: { user_results: { result: { __typename: 'User', rest_id: String(uid), core: { name: 'Nombre ' + h, screen_name: h, created_at: '2015-03-01' }, profile_bio: { description: 'bio de ' + h }, relationship_counts: { followers: 10, following: 5 }, tweet_counts: { tweets: 99 }, verification: { is_blue_verified: true }, parody_commentary_fan_label: 'None' } } },
+            details: { full_text: 'Mira esto https://t.co/x #Tema @otro', created_at_ms: 1793500000000 },
+            counts: { favorite_count: 7, retweet_count: 3, quote_count: 1, reply_count: 2, bookmark_count: 4 }, views: { count: '1234' },
+            url_entities: [{ expanded_url: 'https://www.ejemplo.com/n?utm_source=a' }], hashtag_entities: [{ text: 'Tema' }],
+            mention_entities: [{ id_str: '55', screen_name: 'otro' }], media_entities2: [{ media_key: '3_999', type: 'photo' }],
+            legacy: { lang: 'es', ...(extra.legacy || {}) }, ...(extra.top || {})
+        });
+        // el registro solo guarda lo que toca a las cuentas de las listas: estas son las "seguidas" en esta prueba
+        const track = (...hs) => Object.fromEntries(hs.map(h => [h.toLowerCase(), { handle: h, enabled: true, tags: ['grupoa'] }]));
+        const TRACKED = track('cuentaobs', 'citado', 'repostero', 'dest', 'consesion', 'citaref', 'textolargo', 'resp', ...Array.from({ length: 50 }, (_, i) => 'usuario' + i));
+        await setConfig(baseConfig({ settings: { observe: false }, accounts: TRACKED }));
+        await xhr(gql(), gResp([gEntry(9100, rich(9100, 4001, 'cuentaobs'))]));
+        await tick(2000);
+        check('registro local: apagado por defecto, no se emite nada', got.length === 0, String(got.length));
+
+        await setConfig(baseConfig({ settings: { observe: true }, accounts: TRACKED }));
+        await xhr(gql('HomeTimeline'), gResp([
+            gEntry(9101, rich(9101, 4001, 'cuentaobs')),
+            gEntry(9102, rich(9102, 4002, 'citador', { top: { quoted_tweet_results: { result: rich(9103, 4003, 'citado') } } })),
+            gEntry(9104, rich(9104, 4004, 'repostero', { top: { retweeted_tweet_results: { result: rich(9105, 4005, 'original') } } })),
+            gEntry(9106, rich(9106, 4006, 'respondedor', { legacy: { in_reply_to_status_id_str: '555', in_reply_to_screen_name: 'dest' } })),
+            gEntry(9107, rich(9107, 4010, 'ajeno', { top: { mention_entities: [] } })),                                          // no toca a ninguna lista: no se registra
+            gEntry(9108, rich(9108, 4011, 'mencionador', { top: { mention_entities: [{ id_str: '4003', screen_name: 'citado' }] } }))   // menciona a una cuenta de la lista
+        ]));
+        await tick(2000);
+        const byKey = Object.fromEntries(got.map(r => [r.id + ':' + r.k, r]));
+        const post = byKey['9101:post'];
+        check('registro local: un post lleva id, autor con id y métricas, hora y contadores', post && post.a.id === '4001' && post.a.h === 'cuentaobs' && post.a.f === 10 && post.a.g === 5 && post.a.p === 99 && post.a.bl === true && post.a.cr === '2015-03-01' && post.t === 1793500000000 && post.c.f === 7 && post.c.rt === 3 && post.c.q === 1 && post.c.r === 2 && post.c.bm === 4 && post.c.v === 1234, JSON.stringify(post));
+        check('registro local: enlaces, hashtags, menciones con id y medios', post && post.u[0] === 'https://www.ejemplo.com/n?utm_source=a' && post.tg[0] === 'Tema' && post.m[0].h === 'otro' && post.m[0].id === '55' && post.md[0].id === '3_999' && post.op === 'HomeTimeline' && !!post.sc, JSON.stringify(post));
+        check('registro local: una cita se registra como cita (con su objetivo) y lo citado como post', byKey['9102:quote'] && byKey['9102:quote'].tid === '9103' && byKey['9102:quote'].tau.id === '4003' && !!byKey['9103:post']);
+        check('registro local: un repost lo hace quien reposta, apunta al original y no lleva texto', byKey['9104:repost'] && byKey['9104:repost'].a.id === '4004' && byKey['9104:repost'].tid === '9105' && byKey['9104:repost'].tau.h === 'original' && byKey['9104:repost'].tx === undefined && !!byKey['9105:post']);
+        check('registro local: una respuesta guarda el id y el usuario al que responde', byKey['9106:reply'] && byKey['9106:reply'].tid === '555' && byKey['9106:reply'].rh === 'dest');
+        check('registro local: solo se guarda lo que toca a las listas (por qué se registró cada cosa)', JSON.stringify(byKey['9101:post'].rel) === '["a"]' && JSON.stringify(byKey['9102:quote'].rel) === '["q"]' && JSON.stringify(byKey['9103:post'].rel) === '["a"]' && JSON.stringify(byKey['9104:repost'].rel) === '["a"]' && JSON.stringify(byKey['9105:post'].rel) === '["t"]' && JSON.stringify(byKey['9106:reply'].rel) === '["p"]' && JSON.stringify(byKey['9108:post'].rel) === '["m"]', JSON.stringify(Object.fromEntries(Object.entries(byKey).map(([k, v]) => [k, v.rel]))));
+        check('registro local: una publicación que no toca a ninguna lista no se registra', !byKey['9107:post'] && !got.some(r => r.a.h === 'ajeno'));
+        const before = got.length;
+        await xhr(gql('HomeTimeline'), gResp([gEntry(9101, rich(9101, 4001, 'cuentaobs'))]));
+        await tick(2000);
+        check('registro local: no repite lo ya enviado en esta carga', got.length === before, got.length + ' vs ' + before);
+        const dg2 = await __ask('xaf:getDiagnostics');
+        check('sondeo del esquema: el informe lista rutas de campos (sin valores)', dg2.schema && dg2.schema.tweets >= 20 && 'tweet.rest_id' in dg2.schema.paths && !JSON.stringify(dg2.schema).includes('cuentaobs'), JSON.stringify(dg2.schema && Object.keys(dg2.schema.paths).slice(0, 5)));
+        // esquema observado con sesión iniciada (informe real): datos en legacy, cita solo como referencia, textos largos con entity_set
+        got.length = 0;
+        const sess = (id, uid, h, extra = {}) => ({
+            __typename: 'Tweet', rest_id: String(id),
+            core: { user_results: { result: { __typename: 'User', rest_id: String(uid), is_blue_verified: true, core: { name: 'N ' + h, screen_name: h, created_at: 'Wed Mar 04 10:00:00 +0000 2015' }, profile_bio: { description: 'b' }, relationship_counts: { followers: 3, following: 4 }, tweet_counts: { tweets: 50 }, privacy: { protected: false } } } },
+            views: { count: '900', state: 'EnabledWithCount' },
+            legacy: { created_at: 'Fri Oct 24 15:30:00 +0000 2025', full_text: 'texto', lang: 'es', favorite_count: 5, retweet_count: 2, quote_count: 1, reply_count: 0, bookmark_count: 3, conversation_id_str: '777', user_id_str: String(uid),
+                entities: { urls: [], hashtags: [{ text: 'A' }], user_mentions: [{ id_str: '88', screen_name: 'zeta' }] },
+                extended_entities: { media: [{ media_key: '3_1', id_str: '1', type: 'video', source_status_id_str: '4242' }] }, ...(extra.legacy || {}) }, ...(extra.top || {})
+        });
+        await xhr(gql('HomeTimeline'), gResp([
+            gEntry(9301, sess(9301, 5001, 'consesion')),
+            gEntry(9302, sess(9302, 5002, 'citaref', { legacy: { is_quote_status: true, quoted_status_id_str: '999' }, top: { quotedRefResult: { result: { __typename: 'Tweet', rest_id: '999' } } } })),
+            gEntry(9303, sess(9303, 5003, 'textolargo', { top: { note_tweet: { note_tweet_results: { result: { text: 'largo #LargoTag', entity_set: { hashtags: [{ text: 'LargoTag' }], urls: [{ expanded_url: 'https://largo.com/a' }], user_mentions: [] } } } } } })),
+            gEntry(9304, sess(9304, 5004, 'resp', { legacy: { in_reply_to_status_id_str: '321', in_reply_to_user_id_str: '654', in_reply_to_screen_name: 'dest' } }))
+        ]));
+        await tick(2000);
+        const sk = Object.fromEntries(got.map(r => [r.id + ':' + r.k, r]));
+        const ps = sk['9301:post'];
+        check('esquema con sesión: hora (legacy.created_at), contadores en legacy, visualizaciones y alta de la cuenta', ps && ps.t === Date.parse('Fri Oct 24 15:30:00 +0000 2025') && ps.c.f === 5 && ps.c.rt === 2 && ps.c.bm === 3 && ps.c.v === 900 && ps.a.cr === 'Wed Mar 04 10:00:00 +0000 2015' && ps.a.bl === true && ps.a.f === 3 && ps.a.p === 50, JSON.stringify(ps));
+        check('esquema con sesión: hilo, hashtags, menciones con id y medio con su tuit de origen', ps && ps.cv === '777' && ps.tg[0] === 'A' && ps.m[0].id === '88' && ps.md[0].id === '3_1' && ps.md[0].s === '4242', JSON.stringify(ps));
+        check('esquema con sesión: una cita que solo llega como referencia se registra como cita con el id citado', sk['9302:quote'] && sk['9302:quote'].tid === '999', JSON.stringify(sk['9302:quote']));
+        check('esquema con sesión: en textos largos se usan las entidades completas de note_tweet', sk['9303:post'] && sk['9303:post'].tg[0] === 'LargoTag' && sk['9303:post'].u[0] === 'https://largo.com/a', JSON.stringify(sk['9303:post']));
+        check('esquema con sesión: una respuesta guarda el id del usuario al que responde', sk['9304:reply'] && sk['9304:reply'].tid === '321' && sk['9304:reply'].tau.id === '654' && sk['9304:reply'].rh === 'dest', JSON.stringify(sk['9304:reply']));
+        const bigObs = Array.from({ length: 800 }, (_, i) => gEntry(20000 + i, rich(20000 + i, 6000 + (i % 50), 'usuario' + (i % 50))));
+        const tObs0 = performance.now();
+        await xhr(gql('HomeTimeline'), gResp(bigObs));
+        const dtObs = performance.now() - tObs0;
+        check('registro local: 800 entradas procesadas con la captura activa en < 600 ms', dtObs < 600, dtObs.toFixed(0) + ' ms');
+        await setConfig(baseConfig());
+
+        // ================= filtrado por id de usuario =================
+        const withId = (id, uid, h, extra = {}) => ({ __typename: 'Tweet', rest_id: String(id), core: { user_results: { result: { __typename: 'User', rest_id: String(uid), core: { name: h, screen_name: h } } } }, legacy: { full_text: 'texto', lang: 'es', ...(extra.legacy || {}) }, ...(extra.top || {}) });
+        const learned = [];
+        document.addEventListener('matatigre:ids', e => learned.push(...JSON.parse(e.detail).ids));
+        await setConfig(baseConfig());
+        await xhr(gql('HomeTimeline'), gResp([gEntry(9501, withId(9501, 7001, 'ListadaUno'))]));
+        await tick(1500);
+        check('ids: una cuenta de la lista sin id conocido se filtra por nombre y se pide aprender (nombre, id)', learned.some(l => l.h.toLowerCase() === 'listadauno' && l.id === '7001'), JSON.stringify(learned));
+        await setConfig(baseConfig({ uids: { listadauno: '7001' } }));
+        const byId = JSON.parse(await xhr(gql('HomeTimeline'), gResp([
+            gEntry(9502, withId(9502, 7001, 'ListadaUnoRenombrada')),                                   // mismo id, otro nombre: se quita
+            gEntry(9503, withId(9503, 7777, 'ListadaUno')),                                             // el nombre pasó a otro id: se conserva
+            gEntry(9504, withId(9504, 8000, 'neutral', { top: { quoted_status_result: { result: withId(9505, 7001, 'OtroNombreMas') } } })), // cita por id: se quita
+            gEntry(9506, withId(9506, 8001, 'neutral'))
+        ])));
+        check('ids: se reconoce por id a una cuenta que cambió de nombre (autor y cita) y no se filtra a quien heredó el nombre', JSON.stringify(entryIds(byId)) === JSON.stringify(['tweet-9503', 'tweet-9506']), JSON.stringify(entryIds(byId)));
+        await setConfig(baseConfig());
+
         // ================= pausa =================
         const cfgOff = baseConfig(); cfgOff.settings.enabled = false;
         await setConfig(cfgOff);
@@ -345,6 +536,7 @@ const EXPECT_KEPT = ['tweet-101', 'conversationthread-8', 'tweet-113', 'tweet-11
         // ================= diagnóstico / estado =================
         const st = await __ask('xaf:getState');
         check('getState: API detectada y estadísticas', st.api === true && st.hidden > 0 && st.accounts >= 2);
+        check('getState: cada ocultación trae las listas que la motivaron (vacío si fue una regla)', st.recent.length > 0 && st.recent.every(r => Array.isArray(r.lists)) && st.recent.some(r => r.lists.length > 0), JSON.stringify(st.recent.slice(0, 2)));
         const dg = await __ask('xaf:getDiagnostics');
         check('diagnóstico: contadores de DOM y de API', dg.dom.articles > 10 && dg.pageScript.graphql > 5 && dg.pageScript.xhr > 5 && dg.pageScript.dropped >= 8, JSON.stringify({ a: dg.dom.articles, g: dg.pageScript.graphql, d: dg.pageScript.dropped }));
         check('diagnóstico: esqueleto del primer artículo sin texto', !!dg.dom.firstArticle && !JSON.stringify(dg.dom.firstArticle).includes('texto'));
@@ -371,6 +563,15 @@ const EXPECT_KEPT = ['tweet-101', 'conversationthread-8', 'tweet-113', 'tweet-11
         const t2 = performance.now();
         const bigOut = JSON.parse(await xhr(gql(), big));
         check(`rendimiento API: 800 entradas en ${(performance.now() - t2).toFixed(0)} ms`, performance.now() - t2 < 600 && entryIds(bigOut).length === 600);
+
+        // ================= avisos =================
+        check('salud: con publicaciones reconocibles el estado es ok', (await __ask('xaf:getState')).health === 'ok', JSON.stringify(st.health));
+        chrome.runtime.id = undefined;      // la extensión se actualizó y esta pestaña quedó con un script huérfano
+        await tick(4400);
+        const orphan = document.getElementById('matatigre-toast');
+        check('contexto invalidado: aviso fijo con botón «Recargar» (no se cierra solo)', !!orphan && !orphan.hidden && /Recarga la página/.test(orphan.textContent) && orphan.querySelector('button').textContent === 'Recargar', orphan && orphan.textContent);
+        await tick(6500);
+        check('contexto invalidado: el aviso sigue ahí pasados 6 s', !document.getElementById('matatigre-toast').hidden);
     } catch (e) {
         check('excepción no controlada', false, String(e && e.stack || e));
     }

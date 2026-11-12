@@ -19,3 +19,16 @@ jobs:
         run: |
           npm run build
           if unzip -l dist/*.zip | grep -q "accounts.local.json"; then echo "El ZIP incluye una lista personal"; exit 1; fi
+
+  extremo-a-extremo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Pruebas con la extensión real en Chrome
+        run: node tests/e2e-chrome.mjs
+        env:
+          XAF_BROWSER: /usr/bin/google-chrome
+          XAF_NO_SANDBOX: "1"

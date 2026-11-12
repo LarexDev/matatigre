@@ -18,7 +18,7 @@ labels: bug
 - Sección de X donde ocurre (Inicio, Búsqueda, Perfil…):
 - Modo configurado (Ocultar, Colapsar, Resaltar):
 
-**Diagnóstico** (popup → *Copiar diagnóstico*; revisa el texto antes de pegarlo)
+**Diagnóstico** (*Opciones → Datos → Copiar informe para soporte*; revisa el texto antes de pegarlo)
 
 ```json
 
