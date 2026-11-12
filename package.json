@@ -1,11 +1,12 @@
 {
   "name": "matatigre",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "private": true,
-  "description": "MATATIGRE V.1: extensión de Chrome (MV3) que quita de X las publicaciones de las cuentas de una lista configurable. Sin dependencias.",
+  "description": "MATATIGRE V.1: extensión de Chrome (MV3) que quita de X las publicaciones de las cuentas de una lista configurable. Sin dependencias de ejecución: las dos librerías de gráficos van incluidas en extension/vendor/.",
   "scripts": {
-    "test": "node tools/sync-main.mjs && node --test tests/matcher.test.mjs",
+    "test": "node tools/check.mjs && node tools/sync-main.mjs && node --test tests/matcher.test.mjs tests/observe.test.mjs tests/radar.test.mjs tests/graph.test.mjs tests/cases.test.mjs tests/mylists.test.mjs tests/vendor.test.mjs",
     "test:e2e": "node tests/e2e-chrome.mjs",
+    "check": "node tools/check.mjs",
     "icons": "node tools/make-icons.mjs",
     "serve": "node tests/serve.mjs",
     "sync": "node tools/sync-main.mjs",

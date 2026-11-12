@@ -4,12 +4,8 @@
     const PAGE_SIZE = 100;
 
     let cfg = await XAF.store.load();
-    let seed = { lists: {}, accounts: [] };
-    try { seed = await XAF.store.readSeed(); } catch { /* sin lista inicial */ }
-    if (!cfg.seedMeta) { await XAF.store.seed(); cfg = await XAF.store.load(); }
-
-    let page = 0;
-    let editing = null;
+    let meta = await XAF.store.loadMeta();
+    const ask = msg => chrome.runtime.sendMessage({ type: 'xaf:lists', ...msg });
 
     const el = (tag, props = {}, ...kids) => {
         const n = Object.assign(document.createElement(tag), props);
@@ -17,162 +13,39 @@
         return n;
     };
     const persist = (...keys) => XAF.store.save(Object.fromEntries(keys.map(k => [k, cfg[k]])));
-    const parseTags = s => [...new Set(s.split(',').map(t => t.trim().toLowerCase().replace(/\s+/g, '-')).filter(Boolean))];
-    const listLabel = t => seed.lists?.[t]?.label || t;
-    const allTags = () => [...new Set([...Object.keys(seed.lists || {}), ...Object.values(cfg.accounts).flatMap(a => a.tags || [])])].sort();
-    const listEnabled = t => cfg.lists[t] !== false;
 
     // ---------- pestañas ----------
-    for (const b of document.querySelectorAll('.tabs button')) {
-        b.addEventListener('click', () => {
-            for (const x of document.querySelectorAll('.tabs button')) x.setAttribute('aria-selected', x === b);
-            for (const s of document.querySelectorAll('main > section')) s.hidden = s.id !== 'tab-' + b.dataset.tab;
-        });
+    const TABS = [...document.querySelectorAll('.tabs button')].map(b => b.dataset.tab);
+    function showTab(name, sub) {
+        if (!TABS.includes(name) || (name === 'analysis' && !cfg.settings.analyst)) name = 'lists';
+        for (const x of document.querySelectorAll('.tabs button')) x.setAttribute('aria-selected', x.dataset.tab === name);
+        for (const s of document.querySelectorAll('main > section')) s.hidden = s.id !== 'tab-' + name;
+        if (name === 'analysis') AnalysisTab.onShow(sub);
+        return name;
     }
-
-    // ---------- cuentas ----------
-    function visibleAccounts() {
-        const q = XAF.normalizeText($('q').value.trim());
-        const tag = $('fTag').value, state = $('fState').value;
-        return Object.entries(cfg.accounts)
-            .filter(([, a]) => {
-                if (tag && !(a.tags || []).includes(tag) && !(tag === '__none' && !(a.tags || []).length)) return false;
-                if (state === 'on' && a.enabled === false) return false;
-                if (state === 'off' && a.enabled !== false) return false;
-                if (!q) return true;
-                return XAF.normalizeText(`${a.handle} ${a.name} ${a.note}`).includes(q);
-            })
-            .sort((x, y) => (y[1].enabled !== false) - (x[1].enabled !== false) || (y[1].mentions || 0) - (x[1].mentions || 0) || x[0].localeCompare(y[0]));
-    }
-
-    function renderAccounts() {
-        const sel = $('fTag').value;
-        $('fTag').replaceChildren(el('option', { value: '', textContent: 'Todas las listas' }),
-            ...allTags().map(t => el('option', { value: t, textContent: listLabel(t) })),
-            el('option', { value: '__none', textContent: 'Sin lista' }));
-        $('fTag').value = sel;
-        $('tagList').replaceChildren(...allTags().map(t => el('option', { value: t })));
-
-        const rows = visibleAccounts();
-        const pages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
-        page = Math.min(page, pages - 1);
-        const slice = rows.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
-        const active = Object.values(cfg.accounts).filter(a => a.enabled !== false).length;
-        $('count').textContent = `${rows.length} de ${Object.keys(cfg.accounts).length} cuentas · ${active} activas`;
-        $('page').textContent = `Página ${page + 1} de ${pages}`;
-        $('prev').disabled = page === 0;
-        $('next').disabled = page >= pages - 1;
-        $('rows').replaceChildren(...slice.map(([key, a]) => key === editing ? editRow(key, a) : viewRow(key, a)));
-    }
-
-    function viewRow(key, a) {
-        const on = el('input', { type: 'checkbox', checked: a.enabled !== false, ariaLabel: `Activar @${a.handle}` });
-        on.addEventListener('change', async () => {
-            cfg.accounts[key] = { ...a, enabled: on.checked, touched: true };
-            await persist('accounts');
-            renderAccounts();
-        });
-        const tr = el('tr', { className: a.enabled === false ? 'off' : '' });
-        const link = el('a', { href: `https://x.com/${a.handle}`, target: '_blank', rel: 'noopener', textContent: '@' + a.handle });
-        const inactiveTags = (a.tags || []).length && !(a.tags || []).some(listEnabled);
-        tr.append(
-            el('td', { className: 'c-on' }, on),
-            el('td', { className: 'handle' }, link, a.source === 'manual' ? el('span', { className: 'badge', textContent: 'manual' }) : null),
-            el('td', {}, el('div', { textContent: a.name || '' }), el('div', { className: 'note', textContent: a.note || '', title: a.note || '' })),
-            el('td', {}, ...(a.tags || []).map(t => el('span', { className: 'tag', textContent: listLabel(t) })),
-                inactiveTags ? el('span', { className: 'badge', textContent: 'lista apagada', title: 'Todas sus listas están desactivadas: no se filtra' }) : null),
-            el('td', {}, el('button', { textContent: 'Editar', onclick: () => { editing = key; renderAccounts(); } }),
-                ' ', el('button', {
-                    className: 'danger', textContent: 'Eliminar', onclick: async () => {
-                        delete cfg.accounts[key];
-                        await persist('accounts');
-                        renderAccounts();
-                    }
-                }))
-        );
-        return tr;
-    }
-
-    function editRow(key, a) {
-        const name = el('input', { type: 'text', value: a.name || '', ariaLabel: 'Nombre' });
-        const tags = el('input', { type: 'text', value: (a.tags || []).join(', '), ariaLabel: 'Listas' });
-        tags.setAttribute('list', 'tagList');
-        const note = el('input', { type: 'text', value: a.note || '', ariaLabel: 'Nota' });
-        const handle = el('input', { type: 'text', value: a.handle, ariaLabel: 'Handle' });
-        const save = async () => {
-            const h = normalizeHandle(handle.value);
-            if (!h) return handle.focus();
-            const next = { ...a, handle: handle.value.replace(/^@+/, ''), name: name.value.trim(), tags: parseTags(tags.value), note: note.value.trim(), touched: true };
-            if (h !== key) delete cfg.accounts[key];
-            cfg.accounts[h] = next;
-            editing = null;
-            await persist('accounts');
-            renderAccounts();
-        };
-        const tr = el('tr', { className: 'edit' },
-            el('td', { className: 'c-on' }),
-            el('td', {}, handle),
-            el('td', {}, name, note),
-            el('td', {}, tags),
-            el('td', {}, el('button', { className: 'primary', textContent: 'Guardar', onclick: save }), ' ',
-                el('button', { textContent: 'Cancelar', onclick: () => { editing = null; renderAccounts(); } }))
-        );
-        tr.addEventListener('keydown', e => { if (e.key === 'Enter') save(); else if (e.key === 'Escape') { editing = null; renderAccounts(); } });
-        return tr;
-    }
-
-    $('addForm').addEventListener('submit', async e => {
+    for (const b of document.querySelectorAll('.tabs button')) b.addEventListener('click', () => { history.replaceState(null, '', '#' + b.dataset.tab); showTab(b.dataset.tab); });
+    // flechas izquierda y derecha cambian de pestaña, como en cualquier barra de pestañas
+    document.querySelector('.tabs').addEventListener('keydown', e => {
+        if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+        const btns = [...document.querySelectorAll('.tabs button')], i = btns.indexOf(document.activeElement);
+        if (i < 0) return;
         e.preventDefault();
-        const h = normalizeHandle($('addHandle').value);
-        if (!h) { $('addHandle').setCustomValidity('Handle no válido'); $('addHandle').reportValidity(); return; }
-        $('addHandle').setCustomValidity('');
-        const prev = cfg.accounts[h];
-        cfg.accounts[h] = {
-            handle: $('addHandle').value.trim().replace(/^@+/, '').replace(/^.*(?:x|twitter)\.com\//i, '').split(/[/?#]/)[0] || h,
-            name: $('addName').value.trim() || prev?.name || '',
-            tags: parseTags($('addTags').value).length ? parseTags($('addTags').value) : (prev?.tags || []),
-            note: prev?.note || '', mentions: prev?.mentions, enabled: true, source: prev?.source || 'manual', touched: true
-        };
-        cfg.allowlist = cfg.allowlist.filter(x => normalizeHandle(x) !== h);
-        await persist('accounts', 'allowlist');
-        $('addHandle').value = $('addName').value = $('addTags').value = '';
-        renderAccounts(); renderAllow();
+        const next = btns[(i + (e.key === 'ArrowRight' ? 1 : btns.length - 1)) % btns.length];
+        next.focus(); next.click();
     });
-
-    for (const id of ['q', 'fTag', 'fState']) $(id).addEventListener('input', () => { page = 0; renderAccounts(); });
-    $('prev').addEventListener('click', () => { page--; renderAccounts(); });
-    $('next').addEventListener('click', () => { page++; renderAccounts(); });
-
-    async function bulk(fn, confirmMsg) {
-        const rows = visibleAccounts();
-        if (!rows.length) return;
-        if (confirmMsg && !confirm(confirmMsg.replace('{n}', rows.length))) return;
-        for (const [key, a] of rows) fn(key, a);
-        await persist('accounts');
-        renderAccounts();
+    function route() {
+        const [tab, sub] = location.hash.replace(/^#/, '').split('/');
+        showTab(tab || 'lists', sub);
+        if (tab === 'lists' && sub === 'new') { history.replaceState(null, '', '#lists'); ListsView.newList(); }
     }
-    $('bulkOn').addEventListener('click', () => bulk((k, a) => { cfg.accounts[k] = { ...a, enabled: true, touched: true }; }));
-    $('bulkOff').addEventListener('click', () => bulk((k, a) => { cfg.accounts[k] = { ...a, enabled: false, touched: true }; }));
-    $('bulkDel').addEventListener('click', () => bulk(k => { delete cfg.accounts[k]; }, '¿Eliminar {n} cuentas de la lista?'));
-
-    // ---------- listas ----------
-    function renderLists() {
-        const counts = {};
-        for (const a of Object.values(cfg.accounts)) for (const t of a.tags || []) counts[t] = (counts[t] || 0) + 1;
-        $('lists').replaceChildren(...allTags().map(t => {
-            const sw = el('input', { type: 'checkbox', checked: listEnabled(t), ariaLabel: `Lista ${listLabel(t)}` });
-            sw.addEventListener('change', async () => { cfg.lists[t] = sw.checked; await persist('lists'); renderAccounts(); });
-            return el('div', { className: 'listcard' },
-                el('div', {}, el('strong', { textContent: `${listLabel(t)} · ${counts[t] || 0}` }), el('p', { className: 'muted', textContent: seed.lists?.[t]?.description || 'Lista personalizada.' })),
-                el('label', { className: 'switch' }, sw, el('span')));
-        }));
-    }
+    window.addEventListener('hashchange', route);
 
     // ---------- reglas ----------
-    const KIND = { handle: 'Handle', name: 'Nombre visible', bio: 'Biografía', text: 'Texto', lang: 'Idioma' };
+    const KIND = { handle: 'Usuario (@)', name: 'Nombre visible', bio: 'Biografía', text: 'Texto', lang: 'Idioma' };
     const MODE = { glob: 'Comodín', contains: 'Contiene', regex: 'Regex' };
 
     function renderRules() {
+        if (!cfg.rules.length) { $('ruleRows').replaceChildren(el('tr', { className: 'empty-row' }, el('td', { colSpan: 6, className: 'muted', textContent: 'Aún no tienes reglas. Las listas suelen bastar; añade una regla solo para casos concretos.' }))); return; }
         $('ruleRows').replaceChildren(...cfg.rules.map((r, i) => {
             const on = el('input', { type: 'checkbox', checked: r.enabled !== false, ariaLabel: 'Activar regla' });
             on.addEventListener('change', async () => { cfg.rules[i] = { ...r, enabled: on.checked }; await persist('rules'); });
@@ -203,6 +76,7 @@
 
     // ---------- lista blanca ----------
     function renderAllow() {
+        if (!cfg.allowlist.length) { $('allowRows').replaceChildren(el('li', { className: 'muted', textContent: 'Ninguna excepción todavía.' })); return; }
         $('allowRows').replaceChildren(...cfg.allowlist.map((h, i) => el('li', {}, '@' + h,
             el('button', { textContent: '✕', ariaLabel: `Quitar @${h}`, onclick: async () => { cfg.allowlist.splice(i, 1); await persist('allowlist'); renderAllow(); } }))));
     }
@@ -219,7 +93,7 @@
     // ---------- ajustes ----------
     const SETTINGS = {
         sDeep: 'deepFilter', sReposters: 'filterReposters', sQuoted: 'filterQuoted', sReplies: 'filterReplies', sMentions: 'filterMentions',
-        sUserCells: 'filterUserCells', sPause: 'pauseOnProfile', sFocal: 'keepFocal'
+        sUserCells: 'filterUserCells', sPause: 'pauseOnProfile', sFocal: 'keepFocal', sBar: 'showBar', sAddBtn: 'addButton', sObserve: 'observe', sWatch: 'watch'
     };
     const SCOPE_LABELS = { home: 'Inicio', search: 'Búsqueda', profile: 'Perfiles', status: 'Publicación abierta e hilos', list: 'Listas', notifications: 'Notificaciones', bookmarks: 'Guardados', other: 'Otras páginas' };
 
@@ -227,16 +101,46 @@
         $('enabled').checked = cfg.settings.enabled;
         $('masterLabel').textContent = cfg.settings.enabled ? 'Filtrado activo' : 'Filtrado pausado';
         $('sMode').value = cfg.settings.mode;
+        $('sTextDays').value = cfg.settings.keepTextDays;
         for (const [id, key] of Object.entries(SETTINGS)) $(id).checked = !!cfg.settings[key];
+        renderProfile();
+        $('sAnalyst').checked = !!cfg.settings.analyst;
+        $('analystOpts').hidden = !cfg.settings.analyst;
+        document.querySelector('.tabs [data-tab="analysis"]').hidden = !cfg.settings.analyst;
         $('scopes').replaceChildren(...XAF.SCOPES.map(sc => {
             const box = el('input', { type: 'checkbox', checked: cfg.settings.scope[sc] !== false });
             box.addEventListener('change', async () => { cfg.settings.scope = { ...cfg.settings.scope, [sc]: box.checked }; await persist('settings'); });
             return el('label', { className: 'chk' }, box, SCOPE_LABELS[sc]);
         }));
     }
+    // perfiles de un clic (ver XAF.PROFILES): lo demás de los ajustes no se toca
+    const PROFILE_HINT = { strict: 'Oculta también las respuestas a las cuentas y las menciones.', moderate: 'Autor, reposts y citas: lo recomendado para empezar.', mark: 'No oculta nada: marca con color lo que se ocultaría.' };
+    function renderProfile() {
+        const cur = XAF.profileOf(cfg.settings);
+        for (const b of document.querySelectorAll('#profileSeg button')) b.setAttribute('aria-pressed', String(b.dataset.profile === cur));
+        $('profileHint').textContent = cur ? PROFILE_HINT[cur] : 'Personalizado: has cambiado ajustes a mano.';
+    }
+    for (const b of document.querySelectorAll('#profileSeg button')) b.addEventListener('click', async () => { Object.assign(cfg.settings, XAF.PROFILES[b.dataset.profile]); await persist('settings'); renderSettings(); });
+    function renderTheme() { for (const b of document.querySelectorAll('#themeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.theme === cfg.settings.theme)); }
+    for (const b of document.querySelectorAll('#themeSeg button')) b.addEventListener('click', async () => { cfg.settings.theme = b.dataset.theme; MTTheme.apply(b.dataset.theme); await persist('settings'); renderTheme(); });
+    $('sTextDays').addEventListener('change', async e => {
+        const n = Math.min(365, Math.max(1, Math.round(Number(e.target.value)) || 14));
+        e.target.value = n;
+        cfg.settings.keepTextDays = n;
+        await persist('settings');
+    });
+    // Modo analista: sin él no hay pestaña Análisis ni registro. Al activarlo se enciende el registro (para eso se activa).
+    $('sAnalyst').addEventListener('change', async e => {
+        cfg.settings.analyst = e.target.checked;
+        if (e.target.checked) cfg.settings.observe = true;
+        await persist('settings');
+        renderSettings();
+        if (!cfg.settings.analyst && !$('tab-analysis').hidden) { history.replaceState(null, '', '#settings'); showTab('settings'); }
+    });
+    $('anResume').addEventListener('click', async () => { cfg.settings.observe = true; await persist('settings'); $('anNoData').hidden = true; renderSettings(); });
     $('enabled').addEventListener('change', async e => { cfg.settings.enabled = e.target.checked; await persist('settings'); renderSettings(); });
-    $('sMode').addEventListener('change', async e => { cfg.settings.mode = e.target.value; await persist('settings'); });
-    for (const [id, key] of Object.entries(SETTINGS)) $(id).addEventListener('change', async e => { cfg.settings[key] = e.target.checked; await persist('settings'); });
+    $('sMode').addEventListener('change', async e => { cfg.settings.mode = e.target.value; await persist('settings'); renderProfile(); });
+    for (const [id, key] of Object.entries(SETTINGS)) $(id).addEventListener('change', async e => { cfg.settings[key] = e.target.checked; await persist('settings'); renderProfile(); });
 
     // ---------- estadísticas ----------
     const ROLE_LABELS = { author: 'Autor', reposter: 'Repost', quoted: 'Cita', replyTo: 'Respuesta', mention: 'Mención', text: 'Texto', lang: 'Idioma' };
@@ -250,29 +154,63 @@
         $('statsTop').replaceChildren(...Object.entries(s.byHandle).sort((x, y) => y[1] - x[1]).slice(0, 25).map(([h, n]) => row('@' + h, n)));
     }
     $('statsReset').addEventListener('click', async () => {
-        if (!confirm('¿Reiniciar los contadores?')) return;
+        if (!(await MTUI.confirm({ title: 'Reiniciar los contadores', message: 'Las estadísticas de filtrado volverán a cero.', confirm: 'Reiniciar', danger: true }))) return;
         await chrome.storage.local.set({ [XAF.store.STATS_KEY]: XAF.store.emptyStats() });
         renderStats();
     });
     chrome.storage.onChanged.addListener((ch, area) => { if (area === 'local' && XAF.store.STATS_KEY in ch) renderStats(); });
 
     // ---------- datos ----------
-    const say = (t, bad) => { $('dataMsg').textContent = t; $('dataMsg').style.color = bad ? 'var(--danger)' : ''; };
-    function renderData() {
-        const m = cfg.seedMeta;
-        $('seedInfo').textContent = m ? `Lista inicial: ${m.count} cuentas (${m.generatedAt}).` : 'Sin lista inicial cargada.';
+    const say = (t, bad) => MTUI.toast(t, { error: !!bad });
+    const BACKUP_DAYS = 30;
+    /** Cuándo fue la última copia; si hay algo que perder y pasó mucho tiempo (o nunca se hizo), se avisa con un punto en la pestaña. */
+    function renderBackup() {
+        const has = Object.keys(cfg.accounts).length + Object.keys(cfg.myLists).length > 0;
+        const days = meta.lastBackup ? Math.floor((Date.now() - meta.lastBackup) / 864e5) : null;
+        const due = has && (days === null || days >= BACKUP_DAYS);
+        $('backupInfo').textContent = !has ? 'Cuando tengas listas propias podrás exportar una copia.' : days === null ? 'Aún no has exportado ninguna copia.' : days === 0 ? 'Última copia: hoy.' : `Última copia: hace ${days} ${days === 1 ? 'día' : 'días'}.`;
+        $('backupInfo').classList.toggle('due', due);
+        document.querySelector('.tabs [data-tab="data"]').classList.toggle('due', due);
     }
-    $('reseed').addEventListener('click', async () => {
-        const r = await XAF.store.seed({ force: true });
-        cfg = await XAF.store.load();
-        say(`Lista inicial fusionada: ${r.added} nuevas, ${r.updated} actualizadas.`);
-        renderAll();
+    function renderData() {
+        renderBackup();
+        const total = cfg.subs.reduce((n, s) => n + ((cfg.listData[s.id] || { accounts: [] }).accounts.length), 0);
+        $('seedInfo').textContent = `${cfg.subs.length} listas sincronizadas (${total} cuentas) · ${Object.keys(cfg.myLists).length} listas propias con ${Object.keys(cfg.accounts).length} cuentas`;
+    }
+    async function renderRegistry() {
+        const r = await chrome.runtime.sendMessage({ type: 'xaf:data', op: 'stats' }).catch(() => null);
+        const fmt = ts => new Date(ts).toLocaleDateString('es', { dateStyle: 'medium' });
+        $('obsInfo').textContent = r && r.ok
+            ? (r.obs ? `Registro: ${r.obs} publicaciones y ${r.profiles} cuentas (de ${fmt(r.oldest)} a ${fmt(r.newest)}).` : 'Registro vacío.')
+            : '';
+    }
+    $('obsClear').addEventListener('click', async () => {
+        if (!(await MTUI.confirm({ title: 'Borrar el registro', message: 'Se borrará todo el registro local del análisis. No se puede deshacer.', confirm: 'Borrar', danger: true }))) return;
+        await chrome.runtime.sendMessage({ type: 'xaf:data', op: 'clear' }).catch(() => null);
+        say('Registro borrado.');
+        renderRegistry();
     });
-    $('export').addEventListener('click', () => {
-        const blob = new Blob([JSON.stringify({ version: 1, ...Object.fromEntries(XAF.store.KEYS.map(k => [k, cfg[k]])) }, null, 1)], { type: 'application/json' });
-        const a = el('a', { href: URL.createObjectURL(blob), download: `filtro-x-${new Date().toISOString().slice(0, 10)}.json` });
+    $('export').addEventListener('click', async () => {
+        const backup = {
+            version: 3, settings: cfg.settings, accounts: cfg.accounts, myLists: cfg.myLists, lists: cfg.lists, listModes: cfg.listModes, rules: cfg.rules, allowlist: cfg.allowlist, disabled: cfg.disabled,
+            subs: cfg.subs.map(({ id, name, source, url }) => ({ id, name, source, ...(source === 'custom' ? { url } : {}) })),
+            topics: await AnalysisTab.exportTopics()
+        };
+        const blob = new Blob([JSON.stringify(backup, null, 1)], { type: 'application/json' });
+        const a = el('a', { href: URL.createObjectURL(blob), download: `matatigre-${new Date().toISOString().slice(0, 10)}.json` });
         a.click();
         setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+        meta = await XAF.store.saveMeta({ lastBackup: Date.now() });
+        renderBackup();
+        say('Copia exportada.');
+    });
+    $('diag').addEventListener('click', async () => {
+        const [tab] = await chrome.tabs.query({ url: ['*://x.com/*', '*://*.x.com/*', '*://twitter.com/*', '*://*.twitter.com/*'] });
+        let d = null;
+        if (tab) { try { d = await chrome.tabs.sendMessage(tab.id, { type: 'xaf:getDiagnostics' }); } catch { /* pestaña sin recargar */ } }
+        const manifest = chrome.runtime.getManifest();
+        const text = JSON.stringify({ extension: `${manifest.name} ${manifest.version}`, userAgent: navigator.userAgent, settings: cfg.settings, tab: d || 'sin datos (abre x.com y recárgalo)' }, null, 1);
+        try { await navigator.clipboard.writeText(text); say('Informe copiado.'); } catch { say('No se pudo copiar.', true); }
     });
     $('importBtn').addEventListener('click', () => $('importFile').click());
     $('importFile').addEventListener('change', async e => {
@@ -280,37 +218,60 @@
         e.target.value = '';
         if (!file) return;
         try {
-            const d = XAF.sanitizeConfig(JSON.parse(await file.text()));
-            if (!Object.keys(d).length) throw new Error('formato');
+            const raw = JSON.parse(await file.text());
+            const d = XAF.sanitizeConfig(raw);
+            const topicsAdded = await AnalysisTab.mergeTopics(raw && raw.topics);
+            if (!Object.keys(d).length && !topicsAdded) throw new Error('formato');
             // Importar suma a lo que ya tienes (cuentas y reglas); los ajustes sí se reemplazan.
             const before = Object.keys(cfg.accounts).length;
             const next = {};
             if (d.settings) next.settings = d.settings;
             if (d.accounts) next.accounts = { ...cfg.accounts, ...d.accounts };
+            if (d.myLists) next.myLists = { ...cfg.myLists, ...d.myLists };
             if (d.lists) next.lists = { ...cfg.lists, ...d.lists };
+            if (d.listModes) next.listModes = { ...cfg.listModes, ...d.listModes };
             if (d.allowlist) next.allowlist = [...new Set([...cfg.allowlist, ...d.allowlist])];
+            if (d.disabled) next.disabled = [...new Set([...cfg.disabled, ...d.disabled])];
             if (d.rules) next.rules = [...cfg.rules, ...d.rules.filter(r => !cfg.rules.some(x => x.kind === r.kind && x.mode === r.mode && x.pattern === r.pattern))];
             await XAF.store.save(next);
+            const wanted = (d.catalogSubs || []).filter(id => !cfg.subs.some(s => s.id === id));
+            let extra = '';
+            if (wanted.length) {
+                if (await MTUI.confirm({ title: 'Descargar listas', message: `El archivo incluye ${wanted.length} ${wanted.length === 1 ? 'lista sincronizada' : 'listas sincronizadas'}. ¿Descargarlas ahora?`, confirm: 'Descargar' })) {
+                    const r = await ask({ op: 'subscribe', ids: wanted });
+                    extra = r && r.ok && !r.failed.length ? ` ${r.added.length} listas añadidas.` : ' No se pudieron descargar las listas.';
+                }
+            }
             cfg = await XAF.store.load();
-            say(`Importado: ${Object.keys(cfg.accounts).length - before} cuentas nuevas (total ${Object.keys(cfg.accounts).length}).`);
+            say(`Importado: ${Object.keys(cfg.accounts).length - before} cuentas nuevas.${extra}`);
             renderAll();
         } catch { say('Archivo no válido.', true); }
     });
     $('reset').addEventListener('click', async () => {
-        if (!confirm('Se borrarán cuentas, reglas y ajustes, y se volverá a cargar la lista inicial. ¿Continuar?')) return;
+        if (!(await MTUI.confirm({ title: 'Restablecer todo', message: 'Se borrarán tus listas, cuentas, reglas y ajustes y empezarás de cero.' + (meta.lastBackup ? '' : ' No has exportado ninguna copia.'), confirm: 'Restablecer', danger: true }))) return;
         await chrome.storage.local.clear();
-        await XAF.store.seed({ force: true });
+        window.open(chrome.runtime.getURL('welcome/welcome.html'));
         cfg = await XAF.store.load();
+        meta = await XAF.store.loadMeta();
         say('Restablecido.');
         renderAll();
     });
 
-    function renderAll() { renderSettings(); renderAccounts(); renderLists(); renderRules(); renderAllow(); renderData(); renderStats(); }
+    function renderAll() { renderSettings(); renderTheme(); ListsView.render(); renderRules(); renderAllow(); renderData(); renderStats(); renderRegistry(); }
+    ListsView.init({ cfg: () => cfg, meta: () => meta, persist, ask });
+    await AnalysisTab.init({ cfg: () => cfg, persist, afterListChange: () => ListsView.render() });
     renderAll();
+    route();
 
     XAF.store.onChange(async () => {
-        if (editing) return;
-        cfg = await XAF.store.load();
+        const next = await XAF.store.load();
+        if (JSON.stringify(next) === JSON.stringify(cfg)) return;   // cambio hecho desde esta misma página: ya está dibujado
+        cfg = next;
         renderAll();
+    });
+    chrome.storage.onChanged.addListener(async (ch, area) => {
+        if (area !== 'local' || !('meta' in ch)) return;
+        meta = await XAF.store.loadMeta();
+        ListsView.render();
     });
 })();

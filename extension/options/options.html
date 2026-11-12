@@ -4,70 +4,220 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MATATIGRE V.1 · Opciones</title>
+<script src="../popup/theme.js"></script>
 <link rel="stylesheet" href="../popup/ui.css">
 <link rel="stylesheet" href="options.css">
 </head>
 <body>
 <header class="top">
   <h1 class="brand"><img src="../icons/logo.svg" width="40" height="40" alt="">MATATIGRE V.1</h1>
+  <div class="top-right">
+    <div class="seg" id="themeSeg" role="group" aria-label="Apariencia"><button type="button" data-theme="auto" title="Usar la apariencia del sistema">Auto</button><button type="button" data-theme="light">Claro</button><button type="button" data-theme="dark">Oscuro</button></div>
   <label class="master"><span id="masterLabel">Filtrado activo</span>
     <span class="switch"><input type="checkbox" id="enabled" aria-label="Filtrado activo"><span></span></span>
   </label>
+  </div>
 </header>
 
 <nav class="tabs" role="tablist">
-  <button role="tab" data-tab="accounts" aria-selected="true">Cuentas</button>
-  <button role="tab" data-tab="lists" aria-selected="false">Listas</button>
+  <button role="tab" data-tab="lists" aria-selected="true">Listas</button>
   <button role="tab" data-tab="rules" aria-selected="false">Reglas</button>
-  <button role="tab" data-tab="allow" aria-selected="false">Lista blanca</button>
+  <button role="tab" data-tab="allow" aria-selected="false">Siempre mostrar</button>
   <button role="tab" data-tab="settings" aria-selected="false">Ajustes</button>
   <button role="tab" data-tab="stats" aria-selected="false">Estadísticas</button>
-  <button role="tab" data-tab="data" aria-selected="false">Datos</button>
+  <button role="tab" data-tab="data" aria-selected="false">Copia y datos</button>
+  <button role="tab" data-tab="analysis" aria-selected="false" class="adv" hidden>Análisis</button>
 </nav>
 
 <main>
-  <!-- CUENTAS -->
-  <section id="tab-accounts">
-    <form id="addForm" class="bar">
-      <input type="text" id="addHandle" placeholder="@handle o URL de perfil" aria-label="Handle" autocomplete="off" spellcheck="false">
-      <input type="text" id="addName" placeholder="Nombre (opcional)" aria-label="Nombre">
-      <input type="text" id="addTags" placeholder="Listas, separadas por coma" aria-label="Listas" list="tagList">
-      <button class="primary" type="submit">Añadir cuenta</button>
-    </form>
-    <datalist id="tagList"></datalist>
-    <div class="bar">
-      <input type="search" id="q" placeholder="Buscar por handle, nombre o nota…" aria-label="Buscar">
-      <select id="fTag" aria-label="Filtrar por lista"><option value="">Todas las listas</option></select>
-      <select id="fState" aria-label="Filtrar por estado">
-        <option value="">Todas</option><option value="on">Activas</option><option value="off">Desactivadas</option>
-      </select>
-      <span class="grow"></span>
-      <span class="muted" id="count"></span>
+  <!-- LISTAS -->
+  <section id="tab-lists">
+    <div class="lm">
+      <nav class="lm-side" aria-label="Listas y cuentas">
+        <input type="search" id="lmFind" class="lm-find" placeholder="Buscar lista…" aria-label="Buscar lista" hidden>
+        <div id="lmAll"></div>
+        <div class="lm-group"><span>Mis listas</span><button id="lmNew" class="icon" title="Nueva lista" aria-label="Nueva lista">+</button></div>
+        <div id="lmMine"></div>
+        <div class="lm-group"><span>Sincronizadas</span><button id="lmExplore" class="icon" title="Añadir una lista sincronizada" aria-label="Añadir una lista sincronizada">+</button></div>
+        <div id="lmSubs"></div>
+      </nav>
+      <div class="lm-main" id="lmMain"></div>
     </div>
-    <div class="bar">
-      <button id="bulkOn">Activar las visibles</button>
-      <button id="bulkOff">Desactivar las visibles</button>
-      <button id="bulkDel" class="danger">Eliminar las visibles</button>
-    </div>
-    <table>
-      <thead><tr><th class="c-on">Activa</th><th>Handle</th><th>Nombre / nota</th><th>Listas</th><th></th></tr></thead>
-      <tbody id="rows"></tbody>
-    </table>
-    <div class="bar pager"><button id="prev">← Anterior</button><span id="page" class="muted"></span><button id="next">Siguiente →</button></div>
   </section>
 
-  <!-- LISTAS -->
-  <section id="tab-lists" hidden>
-    <p class="muted">Una cuenta con etiquetas se filtra si <b>al menos una</b> de sus listas está activa. Las cuentas sin etiquetas siempre se filtran. Apagar una lista no borra nada.</p>
-    <div id="lists"></div>
+  <!-- ANÁLISIS -->
+  <section id="tab-analysis" hidden>
+    <p class="muted">Muestra cómo se relacionan las cuentas de tus listas con las demás: quién interactúa con quién, qué grupos forman, de qué hablan y cómo se mueven los mensajes. Cada hallazgo indica las cuentas, las pruebas y los criterios que lo sustentan.</p>
+    <p id="anNoData" class="muted" hidden>El registro está en pausa: no se guardan datos nuevos. <button id="anResume" class="link">Reanudar el registro</button></p>
+    <div class="bar">
+      <select id="anPeriod" aria-label="Periodo">
+        <option value="24h">Últimas 24 horas</option><option value="7d" selected>Últimos 7 días</option><option value="30d">Últimos 30 días</option><option value="all">Todo lo registrado</option>
+      </select>
+      <button id="anRun" class="primary">Analizar</button>
+      <span class="muted" id="anInfo" role="status"></span>
+    </div>
+
+    <nav class="subtabs" id="anNav" role="tablist" aria-label="Secciones del análisis">
+      <button role="tab" id="antab-summary" aria-controls="pane-summary" data-pane="summary" aria-selected="true">Resumen</button>
+      <button role="tab" id="antab-map" aria-controls="pane-map" data-pane="map" aria-selected="false">Mapa</button>
+      <button role="tab" id="antab-narr" aria-controls="pane-narr" data-pane="narr" aria-selected="false">Narrativas</button>
+      <button role="tab" id="antab-topics" aria-controls="pane-topics" data-pane="topics" aria-selected="false">Temas</button>
+      <button role="tab" id="antab-accounts" aria-controls="pane-accounts" data-pane="accounts" aria-selected="false">Cuentas</button>
+      <button role="tab" id="antab-cases" aria-controls="pane-cases" data-pane="cases" aria-selected="false">Expedientes</button>
+    </nav>
+    <p id="anEmpty" class="empty" hidden>Pulsa <b>Analizar</b> para ver los resultados con los datos que se han registrado.</p>
+
+    <!-- Resumen -->
+    <section class="an-pane" role="tabpanel" aria-labelledby="antab-summary" id="pane-summary" data-pane="summary">
+      <div id="anSuff"></div>
+      <div id="anKpi" class="kpis"></div>
+      <h3>Hallazgos</h3>
+      <div id="anFindings"></div>
+      <details class="panel" id="anGuide">
+        <summary>Cómo leer este análisis</summary>
+        <dl class="guide">
+          <dt>Nivel de un hallazgo</dt>
+          <dd><b>Contexto</b>: dato suelto, no indica nada por sí solo. <b>Coincidencia</b>: coinciden en el tiempo o en el contenido, sin que se descarte el azar. <b>Coordinación probable</b>: la sincronía es improbable por azar. <b>Coordinación sostenida</b>: además se repite en el tiempo, con texto repetido y sin una explicación alternativa dominante.</dd>
+          <dt>«Observado frente a esperado»</dt>
+          <dd>Cuántas coincidencias hay y cuántas habría si las horas de cada cuenta fueran al azar. Si lo observado supera con mucho lo esperado, hay sincronía de verdad.</dd>
+          <dt>q</dt>
+          <dd>La probabilidad (ajustada por haber comprobado muchos pares) de ver una sincronía así o mayor por puro azar. Cuanto más pequeña, mejor: por debajo de 0,05 se considera improbable por azar.</dd>
+          <dt>Datos escasos</dt>
+          <dd>Solo ves lo que X le mostró a tu navegador y mientras lo usabas. Con pocas horas o pocos días de registro, los hallazgos cambian mucho: tómalos como orientación.</dd>
+          <dt>Comunidad</dt>
+          <dd>Un grupo de cuentas que se relacionan más entre sí que con el resto. Que dos cuentas estén en la misma comunidad no significa que se coordinen: significa que interactúan.</dd>
+          <dt>Afín y sincronizada</dt>
+          <dd>Una cuenta <b>afín</b> amplifica a menudo a tus listas, como lo haría cualquier persona convencida. Una <b>sincronizada</b> además coincide en el tiempo con otras cuentas más de lo esperable.</dd>
+          <dt>Lo que el análisis no dice</dt>
+          <dd>Nunca afirma quién hay detrás, cuántas personas son, si cobran ni con qué intención: describe patrones compatibles con comportamiento coordinado. La etiqueta, si procede, la pones tú.</dd>
+        </dl>
+      </details>
+      <details class="panel" id="anCalib">
+        <summary>Cómo de fiable es este análisis con tus datos</summary>
+        <div id="anCalibBody"></div>
+      </details>
+    </section>
+
+    <!-- Mapa -->
+    <section class="an-pane" role="tabpanel" aria-labelledby="antab-map" id="pane-map" data-pane="map" hidden>
+      <div class="graphwrap" id="graphWrap">
+        <div id="anGraph"></div>
+        <div class="gov gov-tl"><input type="search" id="gFind" placeholder="Buscar una cuenta…" aria-label="Buscar una cuenta en el mapa" list="gFindList"><datalist id="gFindList"></datalist></div>
+        <div id="gComms" class="gov gov-comms legendbar" aria-label="Comunidades"></div>
+        <div class="gov gov-tr gctl" role="group" aria-label="Controles del mapa">
+          <button id="gZoomIn" class="icon" aria-label="Acercar" title="Acercar">+</button>
+          <button id="gZoomOut" class="icon" aria-label="Alejar" title="Alejar">−</button>
+          <button id="gFit" class="icon" aria-label="Ajustar a la pantalla" title="Ajustar a la pantalla">⤢</button>
+          <button id="gReset" class="icon" aria-label="Quitar resaltado y restablecer la vista" title="Restablecer la vista">↺</button>
+          <button id="gFull" class="icon" aria-label="Pantalla completa" title="Pantalla completa (Esc para salir)" aria-pressed="false">⛶</button>
+          <button id="gPng" class="icon" aria-label="Descargar como imagen" title="Descargar como imagen">⬇</button>
+        </div>
+        <div class="gov gov-bl">
+          <select id="gMode" aria-label="Distribución del mapa"><option value="bubbles">Agrupar por comunidad</option><option value="network">Red de relaciones</option></select>
+          <details class="layers"><summary>Capas</summary>
+            <div class="pop">
+              <label class="chk"><input type="checkbox" id="gInter" checked> Interacciones</label>
+              <label class="chk"><input type="checkbox" id="gAll"> Mostrar todas</label>
+              <label class="chk"><input type="checkbox" id="gCoord" checked> Sincronía</label>
+              <label class="chk"><input type="checkbox" id="gExt" checked> Cuentas externas</label>
+            </div>
+          </details>
+        </div>
+        <div class="gov gov-br"><details class="layers right"><summary aria-label="Leyenda">?</summary><div class="pop" id="anLegend"></div></details></div>
+        <div id="anTip" class="tip" hidden></div>
+      </div>
+      <h3>Comunidades</h3>
+      <div id="anComms"></div>
+      <h3>Actividad simultánea entre comunidades</h3>
+      <p class="muted small">Comunidades distintas, aunque hablen de cosas distintas, que aumentan su actividad en las mismas franjas de 10 minutos más de lo esperable por azar. Se descartan los momentos en que se activa casi toda la muestra.</p>
+      <div id="anCross"></div>
+    </section>
+
+    <!-- Narrativas -->
+    <section class="an-pane" role="tabpanel" aria-labelledby="antab-narr" id="pane-narr" data-pane="narr" hidden>
+      <p class="muted">Contenidos que comparten varias cuentas, con la curva de cuentas que van entrando. Si anotas hechos externos en un expediente, aparecen sobre la curva.</p>
+      <div id="anNarr"></div>
+    </section>
+
+    <!-- Temas -->
+    <section class="an-pane" role="tabpanel" aria-labelledby="antab-topics" id="pane-topics" data-pane="topics" hidden>
+      <p class="muted">Un tema es una lista de palabras que eliges tú. Sin inteligencia artificial: una publicación cuenta para el tema si contiene alguna de sus palabras, y se ve exactamente por cuál. Usa <code>pension*</code> para cualquier palabra que empiece así; una frase se escribe tal cual: <code>salud mental</code>.</p>
+      <form id="topicForm" class="bar">
+        <input type="text" id="topicName" placeholder="Nombre del tema" aria-label="Nombre del tema" maxlength="60" required>
+        <input type="text" id="topicWords" class="grow" placeholder="Palabras separadas por comas: reforma, pension*, salud mental" aria-label="Palabras del tema" maxlength="400" required>
+        <button class="primary" type="submit">Crear tema</button>
+      </form>
+      <div id="anTopics"></div>
+      <h3>Palabras que usan varias comunidades</h3>
+      <p class="muted small">Sin definir nada antes: palabras, hashtags y sitios que dos o más comunidades usan a la vez y que no son corrientes en el registro. Pulsa una para convertirla en tema.</p>
+      <div id="anShared"></div>
+    </section>
+
+    <!-- Cuentas -->
+    <section class="an-pane" role="tabpanel" aria-labelledby="antab-accounts" id="pane-accounts" data-pane="accounts" hidden>
+      <h3>Cuentas externas que interactúan con tus listas</h3>
+      <p class="muted small">Pueden ayudar a descubrir otras cuentas. «Afín» interactúa a menudo con cuentas de tus listas, como cualquier persona convencida: no indica coordinación. «Sincronizada» además coincide en el tiempo con otras cuentas más de lo esperable por azar.</p>
+      <table>
+        <thead><tr><th>Cuenta</th><th>Patrón</th><th class="c-n">Interacciones con tus listas</th><th class="c-n">Pares sincronizados</th><th></th></tr></thead>
+        <tbody id="anCand"></tbody>
+      </table>
+      <h3>Cuentas más relevantes</h3>
+      <table>
+        <thead><tr><th>Cuenta</th><th>Comunidad</th><th class="c-n">Atención</th><th class="c-n" title="Interacciones que recibe">Recibidas</th><th class="c-n" title="Interacciones que hace">Emitidas</th><th class="c-n">Sincronía</th><th>Rol</th><th></th></tr></thead>
+        <tbody id="anNodes"></tbody>
+      </table>
+      <h3>Comparación entre listas</h3>
+      <p class="muted small">Mismo detector y mismos umbrales para todas las listas: cuántas de sus cuentas activas tienen sincronía significativa con otra.</p>
+      <table>
+        <thead><tr><th>Lista</th><th class="c-n">Cuentas activas</th><th class="c-n">Con sincronía</th><th class="c-n">Proporción</th><th class="c-n">Publicaciones por cuenta</th></tr></thead>
+        <tbody id="anLists"></tbody>
+      </table>
+      <details class="panel" id="anTech">
+        <summary>Detalle: eventos y cuentas con señales</summary>
+        <div class="bar"><select id="anFilter" aria-label="Qué mostrar"><option value="all">Todos los eventos</option><option value="e1">Solo con indicadores</option></select></div>
+        <div id="anAccWrap" hidden>
+          <h4>Cuentas con señales</h4>
+          <table>
+            <thead><tr><th>Cuenta</th><th>Señales</th><th class="c-n">Interacciones con tus listas</th><th>Más dirigidas a</th><th></th></tr></thead>
+            <tbody id="anAcc"></tbody>
+          </table>
+        </div>
+        <h4>Eventos</h4>
+        <table>
+          <thead><tr><th>Tipo</th><th>Contenido</th><th class="c-n">Cuentas</th><th>Primera · duración</th><th>Indicadores</th><th>Nivel</th><th>Interpretación</th><th></th></tr></thead>
+          <tbody id="anRows"></tbody>
+        </table>
+        <div id="anIntWrap" hidden>
+          <h4>Cuentas que más interactúan con tus listas</h4>
+          <table>
+            <thead><tr><th>Cuenta</th><th class="c-n">Interacciones</th><th class="c-n">A cuántas cuentas</th><th>Más dirigidas a</th><th></th></tr></thead>
+            <tbody id="anInt"></tbody>
+          </table>
+        </div>
+      </details>
+    </section>
+
+    <!-- Expedientes -->
+    <section class="an-pane" role="tabpanel" aria-labelledby="antab-cases" id="pane-cases" data-pane="cases" hidden>
+      <p class="muted">Un expediente reúne las pruebas de un caso: eventos anclados (que no caducan con el registro), hechos externos que anotas tú y tus notas. Se puede exportar como informe o como paquete verificable.</p>
+      <div class="bar">
+        <input type="text" id="caseTitle" placeholder="Título del expediente" aria-label="Título del expediente" maxlength="120">
+        <input type="text" id="caseQ" placeholder="Pregunta (opcional)" aria-label="Pregunta" maxlength="600">
+        <button id="caseNew" class="primary">Crear</button>
+      </div>
+      <div id="caseList"></div>
+      <div id="caseView" class="panel" hidden></div>
+    </section>
+
+    <aside id="anDrawer" class="drawer" hidden role="dialog" aria-label="Detalle" tabindex="-1"></aside>
   </section>
 
   <!-- REGLAS -->
   <section id="tab-rules" hidden>
-    <p class="muted">Reglas adicionales además de la lista de cuentas. Ejemplos: handle <code>*promo*</code> (comodín), nombre visible o biografía que contenga <code>vendo seguidores</code>, texto que coincida con una expresión regular, idioma <code>ja</code>. Nombre y biografía se leen de la API de X y se aplican al autor (y a la cuenta citada si activas las citas). Las reglas de texto son las más propensas a falsos positivos.</p>
+    <p class="muted">Reglas para ocultar más allá de las listas. Las de texto, nombre y biografía pueden ocultar de más: pruébalas abajo antes de fiarte.</p>
     <form id="ruleForm" class="bar">
       <select id="rKind" aria-label="Aplicar a">
-        <option value="handle">Handle</option><option value="name">Nombre visible</option><option value="bio">Biografía</option><option value="text">Texto de la publicación</option><option value="lang">Idioma (es, en…)</option>
+        <option value="handle">Nombre de usuario (@)</option><option value="name">Nombre visible</option><option value="bio">Biografía</option><option value="text">Texto de la publicación</option><option value="lang">Idioma (es, en…)</option>
       </select>
       <select id="rMode" aria-label="Tipo de coincidencia">
         <option value="glob">Comodín (*)</option><option value="contains">Contiene</option><option value="regex">Expresión regular</option>
@@ -76,6 +226,7 @@
       <input type="text" id="rNote" placeholder="Nota (opcional)" aria-label="Nota">
       <button class="primary" type="submit">Añadir regla</button>
     </form>
+    <p class="muted small">Ejemplo: «Nombre de usuario» + «Comodín» + <code>bot_*</code> oculta todas las cuentas cuyo nombre empieza por bot_.</p>
     <div id="ruleMsg" class="muted" role="status"></div>
     <table>
       <thead><tr><th class="c-on">Activa</th><th>Aplica a</th><th>Coincidencia</th><th>Patrón</th><th>Nota</th><th></th></tr></thead>
@@ -83,7 +234,7 @@
     </table>
     <h3>Probar</h3>
     <div class="bar">
-      <input type="text" id="tHandle" placeholder="handle" aria-label="Handle de prueba">
+      <input type="text" id="tHandle" placeholder="@usuario" aria-label="Nombre de usuario de prueba">
       <input type="text" id="tName" placeholder="nombre visible" aria-label="Nombre de prueba">
       <input type="text" id="tText" placeholder="texto" aria-label="Texto de prueba" class="grow">
       <button id="tRun">Probar</button>
@@ -93,9 +244,9 @@
 
   <!-- LISTA BLANCA -->
   <section id="tab-allow" hidden>
-    <p class="muted">Cuentas que <b>nunca</b> se ocultan, aunque coincidan con la lista o con una regla.</p>
+    <p class="muted">Cuentas que nunca se ocultan, aunque estén en una de tus listas o en una sincronizada.</p>
     <form id="allowForm" class="bar">
-      <input type="text" id="allowHandle" placeholder="@handle" aria-label="Handle a exceptuar">
+      <input type="text" id="allowHandle" placeholder="@usuario" aria-label="Usuario que nunca se oculta">
       <button class="primary" type="submit">Añadir excepción</button>
     </form>
     <ul id="allowRows" class="chips"></ul>
@@ -104,30 +255,45 @@
   <!-- AJUSTES -->
   <section id="tab-settings" hidden>
     <div class="form">
-      <label>Modo
+      <fieldset><legend>Perfil de filtrado</legend>
+        <div class="seg" id="profileSeg" role="group" aria-label="Perfil de filtrado"><button type="button" data-profile="strict">Estricto</button><button type="button" data-profile="moderate">Moderado</button><button type="button" data-profile="mark">Solo marcar</button></div>
+        <p id="profileHint" class="muted small"></p>
+      </fieldset>
+      <label>Modo general
         <select id="sMode">
-          <option value="hide">Ocultar: quitar de la respuesta de la API (y del DOM como respaldo)</option>
-          <option value="collapse">Colapsar con barra (clic para ver)</option>
-          <option value="highlight">Resaltar: dejar visible pero marcada</option>
+          <option value="hide">Ocultar</option>
+          <option value="collapse">Colapsar (queda una barra; un clic la abre)</option>
+          <option value="highlight">Resaltar (se ve, pero marcada)</option>
         </select>
       </label>
-      <label class="chk"><input type="checkbox" id="sDeep"> Filtro en origen: en modo Ocultar, quitar las publicaciones de las respuestas de X antes de que se pinten (recomendado; los cambios aplican a lo que X cargue desde ahora)</label>
-      <fieldset><legend>Qué cuenta como coincidencia</legend>
-        <label class="chk"><input type="checkbox" id="sAuthor" checked disabled> Autor de la publicación (siempre)</label>
-        <label class="chk"><input type="checkbox" id="sReposters"> Reposts y actividad hechos por una cuenta listada ("X reposteó")</label>
-        <label class="chk"><input type="checkbox" id="sQuoted"><span>Publicaciones que <b>citan</b> a una cuenta listada</span></label>
-        <label class="chk"><input type="checkbox" id="sReplies"> Respuestas dirigidas a una cuenta listada</label>
-        <label class="chk"><input type="checkbox" id="sMentions"><span>Publicaciones que <b>mencionan</b> a una cuenta listada</span></label>
-        <label class="chk"><input type="checkbox" id="sUserCells"> Cuentas listadas en sugerencias y listados de personas</label>
+      <label class="chk"><input type="checkbox" id="sDeep"> Quitar las publicaciones antes de que se vean (recomendado)</label>
+      <fieldset><legend>Qué se oculta</legend>
+        <label class="chk"><input type="checkbox" id="sAuthor" checked disabled> Sus publicaciones (siempre)</label>
+        <label class="chk"><input type="checkbox" id="sReposters"> Lo que repostean</label>
+        <label class="chk"><input type="checkbox" id="sQuoted"> Quienes las citan</label>
+        <label class="chk"><input type="checkbox" id="sReplies"> Quienes les responden</label>
+        <label class="chk"><input type="checkbox" id="sMentions"> Quienes las mencionan</label>
+        <label class="chk"><input type="checkbox" id="sUserCells"> Ellas mismas en sugerencias y listados de personas</label>
       </fieldset>
-      <fieldset><legend>Dónde se filtra</legend>
+      <fieldset><legend>En qué partes de X</legend>
         <div id="scopes" class="scopes"></div>
       </fieldset>
-      <fieldset><legend>Excepciones</legend>
-        <label class="chk"><input type="checkbox" id="sPause"> No filtrar dentro del perfil de la propia cuenta listada</label>
-        <label class="chk"><input type="checkbox" id="sFocal"> No ocultar la publicación que abro directamente (enlace a /status/…)</label>
+      <fieldset><legend>Modo analista</legend>
+        <label class="chk"><input type="checkbox" id="sAnalyst"> Activar el modo analista (pestaña Análisis y registro de actividad)</label>
+        <div id="analystOpts" class="stack" hidden>
+          <label class="chk"><input type="checkbox" id="sObserve"> Registrar lo que hacen las cuentas de mis listas y quienes interactúan con ellas</label>
+          <label class="chk"><input type="checkbox" id="sWatch"> Seguir también a las cuentas externas que interactúan a menudo con mis listas</label>
+          <label class="chk">Conservar el texto <input type="number" id="sTextDays" min="1" max="365" style="width:70px"> días</label>
+        </div>
+        <p class="muted small">Se registra lo que publican o repostean las cuentas de tus listas y lo que otras cuentas les responden, citan, repostean o mencionan. Se guarda solo en tu navegador, no se envía a ningún sitio y está apagado por defecto.</p>
       </fieldset>
-      <p class="muted">Atajos de teclado (Alt+Shift+M pausa/reanuda, Alt+Shift+H alterna ocultar/resaltar): se cambian en <code>chrome://extensions/shortcuts</code>.</p>
+      <fieldset><legend>Cuándo no ocultar</legend>
+        <label class="chk"><input type="checkbox" id="sPause"> Mostrar todo dentro del perfil de la cuenta</label>
+        <label class="chk"><input type="checkbox" id="sFocal"> Mostrar la publicación que abro directamente</label>
+        <label class="chk"><input type="checkbox" id="sBar"> Mostrar el contador de ocultas en la página</label>
+        <label class="chk"><input type="checkbox" id="sAddBtn"> Mostrar el icono de MATATIGRE junto a cada cuenta, para añadirla a una lista</label>
+      </fieldset>
+      <p class="muted">Atajos: Alt+Shift+M pausa o reanuda; Alt+Shift+H alterna entre ocultar y resaltar.</p>
     </div>
   </section>
 
@@ -146,26 +312,41 @@
   <!-- DATOS -->
   <section id="tab-data" hidden>
     <div class="form">
-      <p id="seedInfo" class="muted"></p>
-      <div class="bar">
-        <button id="reseed">Fusionar lista inicial</button>
-        <span class="muted">Añade cuentas nuevas y actualiza las que no hayas tocado. No pisa tus ediciones.</span>
-      </div>
-      <div class="bar">
-        <button id="export">Exportar configuración (JSON)</button>
-        <button id="importBtn">Importar…</button>
-        <input type="file" id="importFile" accept="application/json" hidden>
-      </div>
-      <div class="bar">
-        <button id="reset" class="danger">Restablecer todo</button>
-      </div>
-      <div id="dataMsg" class="muted" role="status"></div>
+      <fieldset><legend>Copia de seguridad</legend>
+        <p id="seedInfo" class="muted small"></p>
+        <p id="backupInfo" class="small muted"></p>
+        <p class="muted small">Exporta tus listas propias, cuentas, reglas y ajustes a un archivo. Al importar, se suman a lo que ya tienes. Los expedientes de Análisis se guardan aparte: expórtalos desde cada expediente.</p>
+        <div class="bar">
+          <button id="export">Exportar</button>
+          <button id="importBtn">Importar…</button>
+          <input type="file" id="importFile" accept="application/json" hidden>
+        </div>
+      </fieldset>
+      <fieldset><legend>Registro de actividad</legend>
+        <p id="obsInfo" class="muted small"></p>
+        <div class="bar"><button id="obsClear" class="danger">Borrar registro</button></div>
+      </fieldset>
+      <fieldset><legend>Soporte</legend>
+        <p class="muted small">Copia un informe técnico para pegarlo al pedir ayuda.</p>
+        <div class="bar"><button id="diag">Copiar informe para soporte</button></div>
+      </fieldset>
+      <fieldset><legend>Empezar de cero</legend>
+        <p class="muted small">Borra tus listas, cuentas, reglas y ajustes.</p>
+        <div class="bar"><button id="reset" class="danger">Restablecer todo</button></div>
+      </fieldset>
     </div>
   </section>
 </main>
 
+<script src="../popup/ui.js"></script>
 <script src="../src/matcher.js"></script>
+<script src="../src/mylists.js"></script>
 <script src="../src/store.js"></script>
+<script src="../vendor/cytoscape.min.js"></script>
+<script src="../vendor/echarts.common.min.js"></script>
+<script src="analysis-view.js"></script>
+<script src="analysis-tab.js"></script>
+<script src="lists-view.js"></script>
 <script src="options.js"></script>
 </body>
 </html>

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MATATIGRE V.1</title>
+<script src="../popup/theme.js"></script>
+<link rel="stylesheet" href="../popup/ui.css">
+<link rel="stylesheet" href="welcome.css">
+</head>
+<body>
+<main>
+  <header>
+    <img src="../icons/logo.svg" width="72" height="72" alt="">
+    <div>
+      <h1>MATATIGRE V.1</h1>
+      <p class="muted">Elige qué listas de cuentas quieres ocultar en X.</p>
+    </div>
+  </header>
+
+  <section id="migrateNote" class="note-box" hidden>
+    <p>Tus cuentas siguen funcionando. Elige las listas que quieres recibir siempre al día.</p>
+  </section>
+
+  <section>
+    <div id="state" class="muted" role="status">Cargando…</div>
+    <div id="catalog"></div>
+    <div class="bar">
+      <button id="retry" hidden>Reintentar</button>
+    </div>
+  </section>
+
+  <div class="actions">
+    <button id="go" class="primary" disabled>Empezar</button>
+    <button id="skip" class="link">Ahora no</button>
+  </div>
+
+  <section id="done" hidden>
+    <h2 id="doneTitle">Listo</h2>
+    <p id="doneText"></p>
+    <ul id="doneIssues"></ul>
+    <div class="bar">
+      <a class="btn primary" href="https://x.com/home" target="_blank" rel="noopener">Abrir X</a>
+      <button id="openOptions">Opciones</button>
+    </div>
+  </section>
+</main>
+<script src="../src/matcher.js"></script>
+<script src="../src/mylists.js"></script>
+<script src="../src/store.js"></script>
+<script src="welcome.js"></script>
+</body>
+</html>

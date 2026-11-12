@@ -7,9 +7,15 @@ section{display:grid;gap:8px}
 .stats b{font-size:22px}
 .row{display:flex;gap:8px;align-items:center;justify-content:space-between}
 .row input{flex:1}
+.row select{flex:1}
+.add{display:grid;gap:8px}
+.note{display:grid;gap:4px;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:8px;background:var(--card);padding:8px 10px;font-size:13px}
 .small{font-size:12px}
 #recent{list-style:none;margin:0;padding:0;max-height:130px;overflow:auto;display:grid;gap:2px}
-#recent li{display:flex;justify-content:space-between;gap:8px;font-size:13px;padding:2px 0}
-#recent li span:last-child{color:var(--muted);white-space:nowrap}
+#recent li{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;padding:2px 0}
+#recent li div{display:grid;min-width:0}
+#recent li button{white-space:nowrap;flex:none}
 #recent:empty::before{content:"Nada todavía.";color:var(--muted);font-size:13px}
 #msg{min-height:1.4em;font-size:12px}
+#pauseFor{width:92px;padding:4px 6px;font-size:12px}
+header strong{white-space:nowrap}

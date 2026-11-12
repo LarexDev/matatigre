@@ -1,31 +1,49 @@
 /**
  * Acceso a chrome.storage.local con valores por defecto. Se usa desde el service worker
- * (importScripts), el content script, el popup y la página de opciones.
+ * (importScripts), el content script, el popup, la página de opciones y la de bienvenida.
+ *
+ * Claves de configuración (disparan recargas en las pestañas de X):
+ *   settings, accounts (cuentas propias), myLists (listas propias: { id: { name, created } }), lists (interruptores por lista/etiqueta), listModes (modo propio de cada lista), rules, allowlist,
+ *   subs (listas suscritas), listData (última copia buena de cada una), disabled (cuentas de listas que el usuario apagó), uids (ids de usuario aprendidos por nombre de cuenta)
+ * Claves de estado (no disparan recargas): stats, meta, catalog
  */
 (function (root) {
     'use strict';
     const XAF = (root.XAF = root.XAF || {});
-    const KEYS = ['settings', 'accounts', 'lists', 'rules', 'allowlist', 'seedMeta'];
+    const KEYS = ['settings', 'accounts', 'myLists', 'lists', 'listModes', 'rules', 'allowlist', 'subs', 'listData', 'disabled', 'uids'];
+    const STATE_KEYS = ['meta', 'catalog'];
 
     const DEFAULTS = () => ({
         settings: XAF.resolveSettings(),
         accounts: {},
+        myLists: {},
         lists: {},
+        listModes: {},
         rules: [],
         allowlist: [],
-        seedMeta: null
+        subs: [],
+        listData: {},
+        disabled: [],
+        uids: {}
     });
 
     async function load() {
         const stored = await chrome.storage.local.get(KEYS);
         const d = DEFAULTS();
+        const accounts = stored.accounts || d.accounts, subs = stored.subs || d.subs;
         return {
             settings: XAF.resolveSettings(stored.settings),
-            accounts: stored.accounts || d.accounts,
+            accounts,
+            // listas propias: las guardadas más las que solo existían como etiqueta de una cuenta (versiones anteriores)
+            myLists: XAF.myLists ? XAF.myLists.resolve(stored.myLists, accounts, subs) : (stored.myLists || d.myLists),
             lists: stored.lists || d.lists,
+            listModes: stored.listModes || d.listModes,
             rules: stored.rules || d.rules,
             allowlist: stored.allowlist || d.allowlist,
-            seedMeta: stored.seedMeta || d.seedMeta
+            subs,
+            listData: stored.listData || d.listData,
+            disabled: stored.disabled || d.disabled,
+            uids: stored.uids || d.uids
         };
     }
 
@@ -33,37 +51,16 @@
         return chrome.storage.local.set(partial);
     }
 
-    // data/accounts.json va en el repositorio; data/accounts.local.json es opcional y personal (no se publica).
-    const SEED_FILES = ['data/accounts.json', 'data/accounts.local.json'];
-
-    /** Lee y combina los archivos de lista inicial que existan. */
-    async function readSeed() {
-        const out = { generatedAt: '', lists: {}, accounts: [] };
-        for (const file of SEED_FILES) {
-            try {
-                const res = await fetch(chrome.runtime.getURL(file));
-                if (!res.ok) continue;
-                const d = await res.json();
-                Object.assign(out.lists, d.lists || {});
-                out.accounts.push(...(Array.isArray(d.accounts) ? d.accounts : []));
-                out.generatedAt += (out.generatedAt ? '|' : '') + (d.generatedAt || '');
-            } catch { /* archivo opcional ausente */ }
-        }
-        return out;
+    // ---------- estado de la extensión (bienvenida, última sincronización) ----------
+    // welcome: 'pending' (aún no vista) | 'done' | 'skipped'
+    async function loadMeta() {
+        const m = (await chrome.storage.local.get('meta')).meta;
+        return { welcome: 'pending', lastSync: 0, lastError: '', ...(m && typeof m === 'object' ? m : {}) };
     }
-
-    /** Fusiona la lista inicial con la configuración sin pisar ediciones del usuario. */
-    async function seed({ force = false } = {}) {
-        const data = await readSeed();
-        const cfg = await load();
-        if (!force && cfg.seedMeta && cfg.seedMeta.generatedAt === data.generatedAt) return { added: 0, updated: 0, skipped: true };
-
-        const { accounts, added, updated } = XAF.mergeSeed(cfg.accounts, data.accounts);
-        // Listas nuevas aparecen según el estado por defecto declarado en la semilla.
-        const lists = { ...cfg.lists };
-        for (const [tag, def] of Object.entries(data.lists || {})) if (!(tag in lists)) lists[tag] = !!def.enabledByDefault;
-        await save({ accounts, lists, seedMeta: { generatedAt: data.generatedAt, count: data.accounts.length } });
-        return { added, updated, skipped: false };
+    async function saveMeta(patch) {
+        const meta = { ...(await loadMeta()), ...patch };
+        await chrome.storage.local.set({ meta });
+        return meta;
     }
 
     function onChange(cb) {
@@ -81,5 +78,5 @@
         return s && typeof s === 'object' ? { ...emptyStats(), ...s } : emptyStats();
     }
 
-    XAF.store = { KEYS, STATS_KEY, load, save, seed, readSeed, onChange, loadStats, emptyStats };
+    XAF.store = { KEYS, STATE_KEYS, STATS_KEY, load, save, loadMeta, saveMeta, onChange, loadStats, emptyStats };
 })(typeof globalThis !== 'undefined' ? globalThis : this);

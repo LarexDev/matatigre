@@ -1,10 +1,10 @@
 {
   "manifest_version": 3,
   "name": "MATATIGRE V.1",
-  "version": "1.2.0",
-  "description": "Filtro de cuentas para X: quita de tu timeline las publicaciones, citas y reposts de las cuentas de tu lista. Local, sin servidores.",
+  "version": "2.0.0",
+  "description": "Oculta en X lo de las cuentas de las listas que elijas. Todo queda en tu navegador; solo se descargan las listas que sigues.",
   "minimum_chrome_version": "111",
-  "permissions": ["storage"],
+  "permissions": ["storage", "alarms", "contextMenus"],
   "host_permissions": ["*://x.com/*", "*://*.x.com/*", "*://twitter.com/*", "*://*.twitter.com/*"],
   "background": { "service_worker": "background/service-worker.js" },
   "content_scripts": [
@@ -16,7 +16,7 @@
     },
     {
       "matches": ["*://x.com/*", "*://*.x.com/*", "*://twitter.com/*", "*://*.twitter.com/*"],
-      "js": ["src/matcher.js", "src/store.js", "src/content.js"],
+      "js": ["src/matcher.js", "src/mylists.js", "src/store.js", "src/content.js"],
       "css": ["src/content.css"],
       "run_at": "document_start"
     }

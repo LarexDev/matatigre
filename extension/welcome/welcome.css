@@ -1,0 +1,22 @@
+main{max-width:720px;margin:0 auto;padding:28px 16px 48px}
+header{display:flex;align-items:center;gap:16px;margin-bottom:20px}
+h1{margin:0;font-size:26px}
+h2{font-size:18px;margin:24px 0 6px}
+p{margin:6px 0}
+.note-box{border:1px solid var(--accent);border-radius:10px;padding:12px 16px;background:var(--card);margin-bottom:8px}
+.note-box p{margin:4px 0 0}
+.item{display:flex;gap:14px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:10px 0;background:var(--card);cursor:pointer}
+.item input{margin-top:4px;flex:none;width:18px;height:18px}
+.item strong{display:block}
+.item p{margin:2px 0 0;font-size:13px;color:var(--muted)}
+.item .meta{font-size:12px;color:var(--muted);margin-top:4px}
+.bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.actions{display:flex;gap:16px;align-items:center;margin:20px 0}
+.actions .primary{padding:10px 20px;font-weight:600}
+button:disabled{opacity:.5;cursor:default}
+a.btn{display:inline-block;text-decoration:none;border:1px solid var(--line);border-radius:8px;padding:6px 14px}
+a.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+code{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:0 4px}
+#done{border-top:1px solid var(--line);margin-top:24px}
+#doneIssues{color:var(--danger)}
+.err{color:var(--danger)}

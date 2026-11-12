@@ -3,18 +3,20 @@
 <head>
 <meta charset="utf-8">
 <title>MATATIGRE V.1</title>
+<script src="theme.js"></script>
 <link rel="stylesheet" href="ui.css">
 <link rel="stylesheet" href="popup.css">
 </head>
 <body>
 <header>
   <div class="brand"><img src="../icons/logo.svg" width="36" height="36" alt=""><div><strong>MATATIGRE V.1</strong><div id="status" class="muted"></div></div></div>
-  <label class="switch" title="Activar o pausar el filtrado"><input type="checkbox" id="enabled" aria-label="Filtrado activo"><span></span></label>
+  <div class="row"><select id="pauseFor" aria-label="Pausar el filtrado un tiempo" title="Pausar y reanudar solo"><option value="">Pausar…</option><option value="10">10 minutos</option><option value="60">1 hora</option><option value="720">12 horas</option></select>
+  <label class="switch" title="Activar o pausar el filtrado"><input type="checkbox" id="enabled" aria-label="Filtrado activo"><span></span></label></div>
 </header>
 
 <section class="stats">
-  <div><b id="hidden">–</b><span class="muted">ocultas en esta vista</span></div>
-  <div><b id="accounts">–</b><span class="muted">cuentas activas</span></div>
+  <div><b id="hidden">–</b><span class="muted">ocultas en esta página</span></div>
+  <div><b id="accounts">–</b><span class="muted">cuentas que se filtran</span></div>
 </section>
 
 <div id="apiState" class="pill" role="status"></div>
@@ -22,22 +24,25 @@
 <section>
   <label class="row">Modo
     <select id="mode">
-      <option value="hide">Ocultar (quitar de la respuesta)</option>
-      <option value="collapse">Colapsar (clic para ver)</option>
-      <option value="highlight">Resaltar (sólo marcar)</option>
+      <option value="hide">Ocultar</option>
+      <option value="collapse">Colapsar</option>
+      <option value="highlight">Resaltar</option>
     </select>
   </label>
-  <label class="chk"><input type="checkbox" id="qQuoted"> Ocultar citas de cuentas listadas</label>
-  <label class="chk"><input type="checkbox" id="qReposters"> Ocultar reposts de cuentas listadas</label>
-  <label class="chk"><input type="checkbox" id="qReplies"> Ocultar respuestas a cuentas listadas</label>
-  <label class="chk"><input type="checkbox" id="qMentions"> Ocultar menciones de cuentas listadas</label>
+  <div class="muted small">También ocultar, de esas cuentas</div>
+  <label class="chk"><input type="checkbox" id="qQuoted"> Quienes las citan</label>
+  <label class="chk"><input type="checkbox" id="qReposters"> Lo que repostean</label>
+  <label class="chk"><input type="checkbox" id="qReplies"> Quienes les responden</label>
+  <label class="chk"><input type="checkbox" id="qMentions"> Quienes las mencionan</label>
 </section>
 
 <section>
-  <form id="add" class="row">
-    <input type="text" id="handle" placeholder="@handle o URL de perfil" autocomplete="off" spellcheck="false" aria-label="Handle a añadir">
-    <button class="primary" type="submit">Añadir</button>
+  <div class="muted small">Añadir una cuenta</div>
+  <form id="add" class="add" hidden>
+    <input type="text" id="handle" placeholder="@usuario o enlace del perfil" autocomplete="off" spellcheck="false" aria-label="Cuenta a añadir">
+    <div class="row"><select id="addList" aria-label="Añadir a la lista"></select><button class="primary" type="submit">Añadir</button></div>
   </form>
+  <div id="noLists" class="note" hidden>Para añadir cuentas primero crea una lista propia.<button id="newList" class="link">Crear una lista</button></div>
   <button id="addPage" class="link" hidden></button>
   <div id="msg" class="muted" role="status"></div>
 </section>
@@ -48,10 +53,10 @@
 </section>
 
 <footer class="row">
-  <button id="options">Gestionar lista y reglas…</button>
-  <button id="diag" class="link" title="Copia al portapapeles un informe técnico de lo que ve la extensión en esta pestaña">Copiar diagnóstico</button>
+  <button id="options">Opciones</button>
 </footer>
 <script src="../src/matcher.js"></script>
+<script src="../src/mylists.js"></script>
 <script src="../src/store.js"></script>
 <script src="popup.js"></script>
 </body>
