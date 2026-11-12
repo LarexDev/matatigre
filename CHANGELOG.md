@@ -16,7 +16,7 @@ Cambio grande: la extensión ya no incluye cuentas; se suscribe a listas publica
 
 ### Uso diario
 - Pausar 10 minutos, 1 hora o 12 horas, con vuelta automática. Perfiles de un clic: Estricto, Moderado, Solo marcar.
-- «Por qué se ocultó» en frases («Citando a @x», «Respondiendo a @x»), con «Siempre mostrar» en un clic.
+- «Por qué se ocultó» en frases (`Citando a @x`, `Respondiendo a @x`), con «Siempre mostrar» en un clic.
 - Aviso si X cambia y el filtro deja de reconocer publicaciones; aviso para recargar tras actualizar; recordatorio de copia de seguridad.
 - Modo oscuro (Auto, Claro, Oscuro), diálogos propios con «Deshacer» y lenguaje unificado ([guía](docs/LENGUAJE.md)).
 
