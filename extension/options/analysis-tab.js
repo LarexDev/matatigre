@@ -163,7 +163,7 @@
             el('p', { textContent: f.summary }),
             chips(f.accounts, 10),
             el('div', { className: 'bar' }, el('button', { textContent: 'Ver pruebas', onclick: () => openFinding(f) }), el('button', { textContent: 'Ver en el mapa', onclick: () => goMap(f.accounts) })))),
-            fs.length > 5 ? el('button', { textContent: an.showAll ? 'Mostrar menos' : `Mostrar los ${fs.length - 5} restantes`, onclick: () => { an.showAll = !an.showAll; renderFindings(); } }) : null] :
+            fs.length > 5 ? el('button', { textContent: an.showAll ? 'Mostrar menos' : `Mostrar los ${fs.length - 5} restantes`, onclick: () => { an.showAll = !an.showAll; renderFindings(); } }) : null].filter(Boolean) :
             [el('p', { className: 'muted', textContent: an.graph.sample.nodes ? 'Con los datos reunidos todavía no hay hallazgos que cumplan los criterios. Sigue navegando por X: el análisis mejora con el tiempo.' : 'Aún no hay datos de las cuentas de tus listas en este periodo.' })]));
     }
 

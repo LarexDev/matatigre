@@ -1,6 +1,6 @@
 # Política de privacidad
 
-**Resumen:** MATATIGRE V.1 funciona en tu navegador. No tiene servidores propios, no recopila datos y no incluye analítica ni
+**Resumen:** MATATIGRE funciona en tu navegador. No tiene servidores propios, no recopila datos y no incluye analítica ni
 telemetría. Lo único que hace en red es **descargar listas de cuentas** de un repositorio público (por defecto, en GitHub), y solo
 si te suscribes a alguna. No envía a nadie ni tu configuración, ni tu actividad, ni el contenido de tu timeline.
 

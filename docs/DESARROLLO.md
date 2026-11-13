@@ -215,7 +215,7 @@ npm run serve       # servidor de pruebas; abre http://127.0.0.1:8765/tests/dom-
    ```bash
    git tag v2.0.0
    git push origin main --tags
-   gh release create v2.0.0 dist/matatigre-v2.0.0.zip --title "MATATIGRE V.1 v2.0.0" --notes-file CHANGELOG.md
+   gh release create v2.0.0 dist/matatigre-v2.0.0.zip --title "MATATIGRE v2.0.0" --notes-file CHANGELOG.md
    ```
 
 ## Regenerar recursos gráficos

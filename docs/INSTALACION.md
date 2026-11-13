@@ -1,6 +1,6 @@
 # Instalación
 
-MATATIGRE V.1 no está en la Chrome Web Store: se instala como **extensión sin empaquetar** (modo de desarrollador).
+MATATIGRE no está en la Chrome Web Store: se instala como **extensión sin empaquetar** (modo de desarrollador).
 Es el método habitual para extensiones de código abierto y tarda un minuto.
 
 > Antes de instalar, lee el [descargo de responsabilidad](../DISCLAIMER.md). El uso es bajo tu propia responsabilidad.
@@ -36,7 +36,7 @@ y selecciona la carpeta que contiene `manifest.json`.
 
 ### 4 · Comprueba la instalación
 
-Debe aparecer la tarjeta **MATATIGRE V.1** con el interruptor activado y sin errores.
+Debe aparecer la tarjeta **MATATIGRE** con el interruptor activado y sin errores.
 
 ![Paso 3: extensión instalada](img/instalar-3-extension-instalada.png)
 
@@ -56,7 +56,7 @@ Si no quieres ninguna, pulsa **Ahora no** y añade tus propias cuentas.
 ### 6 · Empieza a usarla
 
 1. Abre [x.com](https://x.com) y **recarga con `F5`** (la extensión se engancha al cargar la página).
-2. Fija el icono: puzzle de la barra de Chrome → alfiler junto a *MATATIGRE V.1*.
+2. Fija el icono: puzzle de la barra de Chrome → alfiler junto a *MATATIGRE*.
 3. Pulsa el icono: arriba debe aparecer **"Lectura de la API de X activa"**.
 
 ![El popup](img/popup.png)
@@ -80,7 +80,7 @@ instalación nueva, la configuración empieza vacía: usa *Opciones → Copia y 
 
 ## Desinstalar
 
-1. `chrome://extensions` → **Quitar** en la tarjeta de MATATIGRE V.1. Se borra su configuración.
+1. `chrome://extensions` → **Quitar** en la tarjeta de MATATIGRE. Se borra su configuración.
 2. Opcional: borra la carpeta descomprimida.
 3. Opcional: la extensión deja una copia de la configuración en el almacenamiento local de x.com
    (clave `matatigre.cfg`). Para borrarla: en x.com, `F12` → *Application* → *Local storage* → `https://x.com` → elimina `matatigre.cfg`.

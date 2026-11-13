@@ -2,7 +2,7 @@
   <img src="extension/icons/logo.svg" alt="Logo de MATATIGRE: un tigre haciendo la venia, con el símbolo de prohibido encima" width="168">
 </p>
 
-<h1 align="center">MATATIGRE V.1</h1>
+<h1 align="center">MATATIGRE</h1>
 
 <p align="center">
   Extensión de Chrome que oculta en X las publicaciones de las cuentas que elijas.
@@ -11,7 +11,7 @@
 <p align="center">
   <a href="LICENSE"><img alt="Licencia MIT" src="https://img.shields.io/badge/licencia-MIT-2ea44f"></a>
   <img alt="Manifest V3" src="https://img.shields.io/badge/Chrome-Manifest%20V3-1d9bf0">
-  <img alt="Versión 2.0.0" src="https://img.shields.io/badge/versi%C3%B3n-2.0.0-f08a24">
+  <img alt="Versión 2.0.1" src="https://img.shields.io/badge/versi%C3%B3n-2.0.1-f08a24">
 </p>
 
 <p align="center">
@@ -49,7 +49,7 @@ con su URL (ver [docs/LISTAS.md](docs/LISTAS.md)).
 Hace falta Chrome 111 o superior. También funciona en Edge, Brave y otros navegadores basados en Chromium. Como no está en
 la Chrome Web Store, se instala como extensión sin empaquetar. Son unos minutos.
 
-**1. Descarga y descomprime.** En [Releases](https://github.com/LarexDev/matatigre/releases) descarga `matatigre-v2.0.0.zip` y
+**1. Descarga y descomprime.** En [Releases](https://github.com/LarexDev/matatigre/releases) descarga `matatigre-v2.0.1.zip` y
 descomprímelo en una carpeta que no vayas a borrar (por ejemplo `Documentos\matatigre`), porque Chrome la carga desde ahí.
 Si prefieres el código fuente, clona el repositorio con `git clone https://github.com/LarexDev/matatigre.git` y usa la carpeta `extension`.
 
@@ -62,7 +62,7 @@ el archivo `manifest.json`.
 
 <p align="center"><img src="docs/img/instalar-2-cargar-sin-empaquetar.png" alt="Paso 2: botón Cargar extensión sin empaquetar" width="860"></p>
 
-**4. Comprueba la instalación.** Debe aparecer la tarjeta *MATATIGRE V.1* con el interruptor encendido.
+**4. Comprueba la instalación.** Debe aparecer la tarjeta *MATATIGRE* con el interruptor encendido.
 
 <p align="center"><img src="docs/img/instalar-3-extension-instalada.png" alt="Paso 3: la extensión instalada en chrome://extensions" width="860"></p>
 

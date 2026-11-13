@@ -11,3 +11,7 @@ tools/.cache/
 Thumbs.db
 .vscode/
 .idea/
+
+
+# Proyecto del video promocional: se conserva en local, no forma parte de la extensión
+promo/video/

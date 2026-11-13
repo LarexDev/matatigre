@@ -24,7 +24,7 @@ async function sample(opts = {}) {
     c.external = [C.sanitizeExternal({ id: 'ext1', at: NOW - 3600000, title: 'Fallo judicial <importante>', kind: 'judicial', url: 'https://ejemplo.com/n' }, NOW)];
     c.notes = 'Mi hipótesis (capa C)';
     const evidence = [10, 11, 12].map(n => C.evidenceFromObs(obs(n, 'u:' + (n - 9)), c.caseId, opts, NOW));
-    return { c, evidence, pkg: await C.buildPackage({ case: c, evidence, handles: { 'u:1': 'Alfa', 'u:2': 'Beta', 'u:3': 'Gamma' }, version: 'MATATIGRE V.1 test', radarVersion: '1.0', ...opts }, NOW) };
+    return { c, evidence, pkg: await C.buildPackage({ case: c, evidence, handles: { 'u:1': 'Alfa', 'u:2': 'Beta', 'u:3': 'Gamma' }, version: 'MATATIGRE test', radarVersion: '1.0', ...opts }, NOW) };
 }
 
 test('canonicalJson: ordena las claves y es estable', () => {

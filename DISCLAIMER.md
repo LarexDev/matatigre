@@ -1,6 +1,6 @@
 # Descargo de responsabilidad
 
-Léelo antes de instalar o usar MATATIGRE V.1 ("la extensión"). Al instalarla o usarla aceptas lo siguiente.
+Léelo antes de instalar o usar MATATIGRE ("la extensión"). Al instalarla o usarla aceptas lo siguiente.
 
 ## 1. Sin garantía
 

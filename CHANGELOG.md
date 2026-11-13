@@ -4,6 +4,11 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). V
 
 ## [Sin publicar]
 
+## [2.0.1] · 2026-11-12
+
+- El producto se llama solo **MATATIGRE** (sin «V.1») en Chrome, la ventana emergente, las opciones, la bienvenida, los expedientes exportados y los documentos.
+- Corregido: en el resumen del análisis aparecía el texto «null» bajo los hallazgos cuando había cinco o menos.
+
 ## [2.0.0] · 2026-11-12
 
 Cambio grande: la extensión ya no incluye cuentas; se suscribe a listas publicadas en [matatigre-listas](https://github.com/LarexDev/matatigre-listas), que se actualizan solas.

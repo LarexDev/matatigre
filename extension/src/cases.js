@@ -140,7 +140,7 @@
 body{font:14px/1.5 system-ui,"Segoe UI",sans-serif;max-width:1000px;margin:24px auto;padding:0 16px;color:#111}h1{font-size:22px;margin-bottom:2px}h2{font-size:16px;border-bottom:1px solid #ccc;padding-bottom:3px;margin-top:26px}
 table{border-collapse:collapse;width:100%;font-size:12.5px}th,td{border:1px solid #d5d5d5;padding:4px 6px;text-align:left;vertical-align:top}th{background:#f3f3f3}.aviso{border:1px solid #b45309;background:#fff7ed;padding:8px 12px;border-radius:6px}
 .capa{display:inline-block;font-size:11px;border:1px solid #888;border-radius:4px;padding:0 6px;margin-left:6px;color:#444}.muted{color:#666}pre{white-space:pre-wrap;background:#f6f6f6;padding:8px;border-radius:6px}</style></head><body>
-<h1>${esc(c.title)}</h1><div class="muted">Expediente ${esc(c.caseId)} · ${esc(c.status)} · generado ${esc(fmtT(pkg.exportedAt))} · ${esc(pkg.software || 'MATATIGRE V.1')} · radar ${esc(pkg.radarVersion || '')}</div>
+<h1>${esc(c.title)}</h1><div class="muted">Expediente ${esc(c.caseId)} · ${esc(c.status)} · generado ${esc(fmtT(pkg.exportedAt))} · ${esc(pkg.software || 'MATATIGRE')} · radar ${esc(pkg.radarVersion || '')}</div>
 <p class="aviso"><strong>Aviso.</strong> ${esc(pkg.notice || NOTICE)} Los resultados dependen de lo que el navegador recibió y de los parámetros indicados.</p>
 <h2>1 · Pregunta y alcance</h2><p>${esc(c.question || '(sin pregunta definida)')}</p><p class="muted">Periodo de los eventos anclados: ${esc(fmtT(from))} a ${esc(fmtT(to))}.</p>
 <h2>2 · Datos y cobertura</h2><p>${ev.length} observaciones ancladas, ${c.events.length} eventos. Cobertura = reposteros observados / contador de reposts de la publicación original cuando ambos se conocen; en los demás tipos de evento no se puede estimar.${pkg.includesHandles ? '' : ' Las cuentas aparecen seudonimizadas.'}</p>
@@ -163,7 +163,7 @@ table{border-collapse:collapse;width:100%;font-size:12.5px}th,td{border:1px soli
     if (!XAF || !XAF.db) return;
     const { db } = XAF;
     const exclusive = XAF.ingest && XAF.ingest.exclusive ? XAF.ingest.exclusive : fn => fn();
-    const version = () => { try { const m = chrome.runtime.getManifest(); return m.name + ' ' + m.version; } catch { return 'MATATIGRE V.1'; } };
+    const version = () => { try { const m = chrome.runtime.getManifest(); return m.name + ' ' + m.version; } catch { return 'MATATIGRE'; } };
 
     const light = c => ({ caseId: c.caseId, title: c.title, question: c.question, status: c.status, updatedAt: c.updatedAt, createdAt: c.createdAt, events: c.events.length, external: c.external.length });
 

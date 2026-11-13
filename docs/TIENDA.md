@@ -6,7 +6,7 @@ Todo lo que pide el formulario de publicación, listo para pegar. **No se ha env
 
 | Campo | Valor |
 | --- | --- |
-| Nombre | MATATIGRE V.1 |
+| Nombre | MATATIGRE |
 | Resumen (máx. 132 caracteres) | Oculta en X lo de las cuentas de las listas que elijas. Todo queda en tu navegador; solo se descargan las listas que sigues. |
 | Categoría | Productividad (alternativa: Redes sociales) |
 | Idioma | Español |

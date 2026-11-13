@@ -104,7 +104,7 @@ try {
     }
     check('la extensión carga y su service worker arranca', !!sw);
     const manifestName = await (await cdp(sw.webSocketDebuggerUrl)).eval('chrome.runtime.getManifest().name');
-    check('nombre de la extensión: MATATIGRE V.1', manifestName === 'MATATIGRE V.1', manifestName);
+    check('nombre de la extensión: MATATIGRE', manifestName === 'MATATIGRE', manifestName);
     const extId = sw && new URL(sw.url).host;
 
     const swc = await cdp(sw.webSocketDebuggerUrl);
